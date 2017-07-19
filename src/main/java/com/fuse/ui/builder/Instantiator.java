@@ -23,29 +23,7 @@ public class Instantiator {
       }
     }
 
-    if(typ.equals("TextNode")){
-      TextNode n = new TextNode();
-      // configurator?
-      return n;
-    }
-
-    if(typ.equals("LineNode")){
-      LineNode n = new LineNode();
-      // configurator?
-      return n;
-    }
-
-    if(typ.equals("ImageNode")){
-      ImageNode n = new ImageNode();
-      // configurator?
-      return n;
-    }
-
-    //if(typ.equals("Node")){
-      Node n = new Node();
-      // configurator?
-      return n;
-    // }
+    return Instantiator.defaultInstantiator(model);
   }
 
   public void setTypeInstantiator(String typeValue, Function<Model, Node> func){
@@ -53,5 +31,34 @@ public class Instantiator {
       typeInstatiators = new HashMap<>();
 
     typeInstatiators.put(typeValue, func);
+  }
+
+  public static Node defaultInstantiator(Model model){
+    String typ = model.get("type", "Node");
+
+    Node n = null;
+
+    if(typ.equals("TextNode")){
+      n = new TextNode();
+    }
+
+    if(n == null && typ.equals("LineNode")){
+      n = new LineNode();
+    }
+
+    if(n == null && typ.equals("ImageNode")){
+      n = new ImageNode();
+      // configurator?
+      return n;
+    }
+
+    if(n == null){ //typ.equals("Node")){
+      n = new Node();
+    }
+
+    if(model.has("name"))
+      n.setName(model.get("name"));
+
+    return n;
   }
 }
