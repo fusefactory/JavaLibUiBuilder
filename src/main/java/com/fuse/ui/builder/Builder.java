@@ -15,7 +15,12 @@ public class Builder {
   }
 
   public Node createNode(String nodeId){
+    return createNode(nodeId, false /* not active */);
+  }
+
+  public Node createNode(String nodeId, boolean activeBuilder){
     NodeBuilder nodeBuilder = new NodeBuilder(layoutCollection, nodeId);
+    nodeBuilder.setActive(activeBuilder);
     return nodeBuilder.createNode();
   }
 }

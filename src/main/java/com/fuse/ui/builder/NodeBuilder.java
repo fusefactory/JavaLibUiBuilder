@@ -8,6 +8,7 @@ public class NodeBuilder {
   private Instantiator instantiator;
   private ModelCollection collection;
   private String nodeId;
+  private boolean bActive = false;
 
   public NodeBuilder(ModelCollection col, String nodeId){
     collection = col;
@@ -39,5 +40,9 @@ public class NodeBuilder {
 
   private boolean isDirectChild(Model potentialChild, Model potentialParent){
     return potentialChild.get("parent", "").equals(potentialParent.getId());
+  }
+
+  public void setActive(boolean newActive){
+    this.bActive = newActive;
   }
 }
