@@ -1,0 +1,9 @@
+[
+    {"id": "NodeBuilderTest.page"},
+    {"id": "NodeBuilderTest.page.title", "parent": "NodeBuilderTest.page", "type": "TextNode"},
+    {"id": "NodeBuilderTest.page.divider", "parent": "NodeBuilderTest.page", "type": "LineNode"},
+    {"id": "NodeBuilderTest.page.image", "parent": "NodeBuilderTest.page", "type": "ImageNode"},
+    {"id": "NodeBuilderTest.page.divider2", "parent": "NodeBuilderTest.page", "type": "LineNode"},
+    {"id": "NodeBuilderTest.page.footer", "parent": "NodeBuilderTest.page", "type": "TextNode"},
+    {"id": "NodeBuilderTest.foobar"},
+]
