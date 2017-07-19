@@ -101,6 +101,10 @@ public class NodeBuilder {
 
   public boolean isActive(){ return bActive; }
 
+  public void setInstantiator(Instantiator newInstantiator){
+    instantiator = newInstantiator;
+  }
+
   protected Model getNodeModel(){
     return nodeModel;
   }
@@ -140,6 +144,7 @@ public class NodeBuilder {
 
     // create builder
     NodeBuilder childBuilder = new NodeBuilder(this.collection, childModel.getId());
+    childBuilder.setInstantiator(instantiator);
     childBuilder.setActive(isActive());
 
     // let builder generate node

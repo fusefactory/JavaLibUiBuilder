@@ -7,14 +7,13 @@ import org.junit.Test;
 import org.junit.Ignore;
 
 import processing.core.PGraphics;
-import com.fuse.cms.ModelCollection;
+import com.fuse.cms.Model;
 import com.fuse.ui.Node;
 import com.fuse.ui.TextNode;
 import com.fuse.ui.ImageNode;
 import com.fuse.ui.LineNode;
 
 public class BuilderTest {
-  private ModelCollection col;
 
   public BuilderTest(){
     Node.setPGraphics(new PGraphics());
@@ -59,5 +58,44 @@ public class BuilderTest {
     assertEquals(n.getChildNodes().size(), 3);
   }
 
+  @Test public void addTypeInstantiator(){
+    Builder builder = new Builder();
+    builder.getLayoutCollection().loadJsonFromFile("testdata/BuilderTest.createNode.1.json");
 
+    Node n = builder.createNode("NodeBuilderTest.page");
+    assertEquals(n.getChildNodes().get(0).getClass(), TextNode.class);
+    assertEquals(((TextNode)n.getChildNodes().get(0)).getText(), "");
+    assertEquals(n.getChildNodes().get(1).getClass(), TextNode.class);
+    assertEquals(((TextNode)n.getChildNodes().get(1)).getText(), "");
+    assertEquals(n.getChildNodes().get(2).getClass(), ImageNode.class);
+    assertEquals(n.getChildNodes().size(), 3);
+
+    builder.setTypeInstantiator("TextNode", (Model layoutModel) -> {
+      TextNode tn = new TextNode();
+      tn.setText("customly instantiated!");
+      return tn;
+    });
+
+    n = builder.createNode("NodeBuilderTest.page");
+    assertEquals(n.getChildNodes().get(0).getClass(), TextNode.class);
+    assertEquals(((TextNode)n.getChildNodes().get(0)).getText(), "customly instantiated!");
+    assertEquals(n.getChildNodes().get(1).getClass(), TextNode.class);
+    assertEquals(((TextNode)n.getChildNodes().get(1)).getText(), "customly instantiated!");
+    assertEquals(n.getChildNodes().get(2).getClass(), ImageNode.class);
+    assertEquals(n.getChildNodes().size(), 3);
+
+    builder.setTypeInstantiator("TextNode", (Model layoutModel) -> {
+      TextNode tn = new TextNode();
+      tn.setText("simple");
+      return tn;
+    });
+
+    n = builder.createNode("NodeBuilderTest.page");
+    assertEquals(n.getChildNodes().get(0).getClass(), TextNode.class);
+    assertEquals(((TextNode)n.getChildNodes().get(0)).getText(), "simple");
+    assertEquals(n.getChildNodes().get(1).getClass(), TextNode.class);
+    assertEquals(((TextNode)n.getChildNodes().get(1)).getText(), "simple");
+    assertEquals(n.getChildNodes().get(2).getClass(), ImageNode.class);
+    assertEquals(n.getChildNodes().size(), 3);
+  }
 }
