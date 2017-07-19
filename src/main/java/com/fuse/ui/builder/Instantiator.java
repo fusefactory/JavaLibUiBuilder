@@ -1,5 +1,8 @@
 package com.fuse.ui.builder;
 
+import java.util.function.Function;
+import java.util.Map;
+import java.util.HashMap;
 import com.fuse.cms.Model;
 
 import com.fuse.ui.Node;
@@ -8,9 +11,17 @@ import com.fuse.ui.TextNode;
 import com.fuse.ui.ImageNode;
 
 public class Instantiator {
+  private Map<String, Function<Model, Node>> typeInstatiators = null;
+
   public Node createNode(Model model){
     String typ = model.get("type", "Node");
-    // System.out.println("typ: "+typ);
+
+    if(typeInstatiators != null){
+      Function<Model, Node> func = typeInstatiators.get(typ);
+      if(func != null){
+        return func.apply(model);
+      }
+    }
 
     if(typ.equals("TextNode")){
       TextNode n = new TextNode();
@@ -35,5 +46,12 @@ public class Instantiator {
       // configurator?
       return n;
     // }
+  }
+
+  public void setTypeInstantiator(String typeValue, Function<Model, Node> func){
+    if(typeInstatiators == null)
+      typeInstatiators = new HashMap<>();
+
+    typeInstatiators.put(typeValue, func);
   }
 }
