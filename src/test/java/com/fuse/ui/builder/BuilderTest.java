@@ -19,21 +19,21 @@ public class BuilderTest {
     Node.setPGraphics(new PGraphics());
   }
 
-  @Test public void createNode(){
-    Builder builder = new Builder();
-    builder.getLayoutCollection().loadJsonFromFile("testdata/BuilderTest.1.json");
-
-    Node n = builder.createNode("NodeBuilderTest.page");
-    assertEquals(n.getChildNodes().get(0).getClass(), TextNode.class);
-    assertEquals(n.getChildNodes().get(1).getClass(), TextNode.class);
-    assertEquals(n.getChildNodes().get(2).getClass(), ImageNode.class);
-    assertEquals(n.getChildNodes().size(), 3);
-  }
+  // @Test public void createNode(){
+  //   Builder builder = new Builder();
+  //   builder.getLayoutCollection().loadJsonFromFile("testdata/BuilderTest.createNode.json");
+  //
+  //   Node n = builder.createNode("NodeBuilderTest.page");
+  //   assertEquals(n.getChildNodes().get(0).getClass(), TextNode.class);
+  //   assertEquals(n.getChildNodes().get(1).getClass(), TextNode.class);
+  //   assertEquals(n.getChildNodes().get(2).getClass(), ImageNode.class);
+  //   assertEquals(n.getChildNodes().size(), 3);
+  // }
 
   @Test public void createNode_active(){
     // creat builder and load initial data
     Builder builder = new Builder();
-    builder.getLayoutCollection().loadJsonFromFile("testdata/BuilderTest.1.json");
+    builder.getLayoutCollection().loadJsonFromFile("testdata/BuilderTest.createNode.json");
 
     // create a node with active flag=true
     Node n = builder.createNode("NodeBuilderTest.page", true /* active! changes to the layout data are actively applied to the created node */);
@@ -43,12 +43,20 @@ public class BuilderTest {
     assertEquals(n.getChildNodes().size(), 3);
 
     // update layout data, verify new layout is applied to earlier created Node
-    builder.getLayoutCollection().loadJsonFromFile("testdata/BuilderTest.2.json");
+    assertTrue(builder.getLayoutCollection().loadJsonFromFile("testdata/BuilderTest.createNode.addOne.json"));
     assertEquals(n.getChildNodes().get(0).getClass(), TextNode.class);
-    assertEquals(n.getChildNodes().get(1).getClass(), LineNode.class);
+    assertEquals(n.getChildNodes().get(1).getClass(), TextNode.class);
     assertEquals(n.getChildNodes().get(2).getClass(), ImageNode.class);
     assertEquals(n.getChildNodes().get(3).getClass(), LineNode.class);
-    assertEquals(n.getChildNodes().get(4).getClass(), TextNode.class);
-    assertEquals(n.getChildNodes().size(), 5);
+    assertEquals(n.getChildNodes().size(), 4);
+
+    // // update layout data, verify new layout is applied to earlier created Node
+    // builder.getLayoutCollection().loadJsonFromFile("testdata/BuilderTest.createNode.removeOne.json");
+    // assertEquals(n.getChildNodes().get(0).getClass(), TextNode.class);
+    // assertEquals(n.getChildNodes().get(1).getClass(), TextNode.class);
+    // assertEquals(n.getChildNodes().get(2).getClass(), ImageNode.class);
+    // assertEquals(n.getChildNodes().get(3).getClass(), LineNode.class);
+    // assertEquals(n.getChildNodes().size(), 4);
+
   }
 }

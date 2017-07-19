@@ -2,5 +2,5 @@
     {"id": "NodeBuilderTest.page"},
     {"id": "NodeBuilderTest.page.title", "parent": "NodeBuilderTest.page", "type": "TextNode"},
     {"id": "NodeBuilderTest.page.subtitle", "parent": "NodeBuilderTest.page", "type": "TextNode"},
-    {"id": "NodeBuilderTest.page.image", "parent": "NodeBuilderTest.page", "type": "ImageNode"},
+    {"id": "NodeBuilderTest.page.image", "parent": "NodeBuilderTest.page", "type": "ImageNode"}
 ]

@@ -10,6 +10,7 @@ import com.fuse.ui.ImageNode;
 public class Instantiator {
   public Node createNode(Model model){
     String typ = model.get("type", "Node");
+    // System.out.println("typ: "+typ);
 
     if(typ.equals("TextNode")){
       TextNode n = new TextNode();
