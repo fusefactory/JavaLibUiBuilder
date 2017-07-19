@@ -60,6 +60,7 @@ public class NodeBuilder {
       }, this);
 
       this.collection.removeEvent.addListener((Model removeModel) -> {
+        System.out.println("REMOVE MODEL: "+removeModel.getId());
         // this our model?
         if(this.nodeModel == removeModel){
           if(this.createdNode != null){
