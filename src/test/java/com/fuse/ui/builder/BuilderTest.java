@@ -20,16 +20,16 @@ public class BuilderTest {
     Node.setPGraphics(new PGraphics());
   }
 
-  // @Test public void createNode(){
-  //   Builder builder = new Builder();
-  //   builder.getLayoutCollection().loadJsonFromFile("testdata/BuilderTest.createNode.json");
-  //
-  //   Node n = builder.createNode("NodeBuilderTest.page");
-  //   assertEquals(n.getChildNodes().get(0).getClass(), TextNode.class);
-  //   assertEquals(n.getChildNodes().get(1).getClass(), TextNode.class);
-  //   assertEquals(n.getChildNodes().get(2).getClass(), ImageNode.class);
-  //   assertEquals(n.getChildNodes().size(), 3);
-  // }
+  @Test public void createNode(){
+    Builder builder = new Builder();
+    builder.getLayoutCollection().loadJsonFromFile("testdata/BuilderTest.createNode.1.json");
+
+    Node n = builder.createNode("NodeBuilderTest.page");
+    assertEquals(n.getChildNodes().get(0).getClass(), TextNode.class);
+    assertEquals(n.getChildNodes().get(1).getClass(), TextNode.class);
+    assertEquals(n.getChildNodes().get(2).getClass(), ImageNode.class);
+    assertEquals(n.getChildNodes().size(), 3);
+  }
 
   @Ignore @Test public void createNode_active(){
     // creat builder and load initial data
@@ -58,4 +58,6 @@ public class BuilderTest {
     assertEquals(n.getChildNodes().get(2).getClass(), LineNode.class);
     assertEquals(n.getChildNodes().size(), 3);
   }
+
+
 }
