@@ -21,6 +21,10 @@ public class Builder {
     return layoutCollection;
   }
 
+  public void setLayoutCollection(ModelCollection newCol){
+    layoutCollection = newCol;
+  }
+
   public Node createNode(String nodeId){
     return createNode(nodeId, false /* not active */);
   }
