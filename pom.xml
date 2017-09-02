@@ -30,21 +30,21 @@
         <dependency>
             <groupId>com.github.fusefactory</groupId>
             <artifactId>JavaLibEvent</artifactId>
-            <version>1.1.2</version>
+            <version>1.1.7</version>
         </dependency>
 
         <!-- https://github.com/fusefactory/JavaLibCms -->
         <dependency>
             <groupId>com.github.fusefactory</groupId>
             <artifactId>JavaLibCms</artifactId>
-            <version>1.1.2</version>
+            <version>1.1.4</version>
         </dependency>
 
         <!-- https://github.com/fusefactory/JavaLibUi -->
         <dependency>
             <groupId>com.github.fusefactory</groupId>
             <artifactId>JavaLibUi</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
         </dependency>
     </dependencies>
 
