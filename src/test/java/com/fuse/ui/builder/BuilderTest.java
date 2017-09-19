@@ -98,4 +98,18 @@ public class BuilderTest {
     assertEquals(n.getChildNodes().get(2).getClass(), ImageNode.class);
     assertEquals(n.getChildNodes().size(), 3);
   }
+
+  @Test public void setUserImplicitBuilder(){
+    Builder builder = new Builder();
+    builder.setUseImplicitBuilder(true);
+    builder.getLayoutCollection().loadJsonFromFile("testdata/BuilderTest.implicit.json");
+
+    Node n = builder.createNode("NodeBuilderImplicitTest.page");
+    assertEquals(n.getChildNodes().get(0).getClass(), TextNode.class);
+    assertEquals(n.getChildNodes().get(1).getClass(), TextNode.class);
+    assertEquals(n.getChildNodes().get(2).getClass(), ImageNode.class);
+    assertEquals(n.getChildNodes().size(), 3);
+    assertEquals(n.getChildNodes().get(2).getChildNodes().get(0).getClass(), TextNode.class);
+    assertEquals(n.getChildNodes().get(2).getChildNodes().size(), 1);
+  }
 }
