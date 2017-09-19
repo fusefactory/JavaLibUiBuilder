@@ -22,11 +22,13 @@ public class NodeBuilderImplicitTest {
   }
 
   @Test public void createNode(){
-    NodeBuilder nb = new NodeBuilder(col, "NodeBuilderImplicitTest.page");
+    NodeBuilderImplicit nb = new NodeBuilderImplicit(col, "NodeBuilderImplicitTest.page", null);
     Node n = nb.createNode();
     assertEquals(n.getChildNodes().get(0).getClass(), TextNode.class);
     assertEquals(n.getChildNodes().get(1).getClass(), TextNode.class);
     assertEquals(n.getChildNodes().get(2).getClass(), ImageNode.class);
     assertEquals(n.getChildNodes().size(), 3);
+    assertEquals(n.getChildNodes().get(2).getChildNodes().get(0).getClass(), TextNode.class);
+    assertEquals(n.getChildNodes().get(2).getChildNodes().size(), 1);
   }
 }

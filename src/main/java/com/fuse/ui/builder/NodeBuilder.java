@@ -12,18 +12,27 @@ import com.fuse.cms.ModelCollection;
 import com.fuse.ui.Node;
 
 public class NodeBuilder {
-  private Instantiator instantiator;
-  private ModelCollection collection;
+  protected Instantiator instantiator;
+  protected ModelCollection collection;
+  protected boolean bActive = false;
   private String nodeId;
-  private boolean bActive = false;
   private Node createdNode = null;
   private Model nodeModel = null;
   private List<NodeBuilder> activeChildNodeBuilders;
 
   public NodeBuilder(ModelCollection col, String nodeId){
+    this(col, nodeId, null, false);
+  }
+
+  public NodeBuilder(ModelCollection col, String nodeId, Instantiator instantiator){
+    this(col, nodeId, instantiator, false);
+  }
+
+  public NodeBuilder(ModelCollection col, String nodeId, Instantiator instantiator, boolean active){
     collection = col;
     this.nodeId = nodeId;
-    this.instantiator = new Instantiator();
+    this.instantiator = instantiator == null ? new Instantiator() : instantiator;
+    this.setActive(active);
     activeChildNodeBuilders = new ArrayList<>();
   }
 
@@ -109,18 +118,18 @@ public class NodeBuilder {
     return nodeModel;
   }
 
-  private boolean isDirectChild(Model potentialChild, Model potentialParent){
+  protected boolean isDirectChild(Model potentialChild, Model potentialParent){
     return potentialChild.get("parent", "").equals(potentialParent.getId()) && !potentialChild.get("parent", "").equals("");
   }
 
-  private boolean isChild(Model potentialChild, Model potentialParent){
-    for(Model curModel = potentialChild; curModel != null; curModel = this.collection.findById(curModel.get("parent", ""))){
-      if(curModel.get("parent").equals(potentialParent.getId()))
-        return true;
-    }
-
-    return false;
-  }
+  // private boolean isChild(Model potentialChild, Model potentialParent){
+  //   for(Model curModel = potentialChild; curModel != null; curModel = this.collection.findById(curModel.get("parent", ""))){
+  //     if(curModel.get("parent").equals(potentialParent.getId()))
+  //       return true;
+  //   }
+  //
+  //   return false;
+  // }
 
   protected NodeBuilder getActiveChildBuilderForModel(Model childModel){
     if(!isActive())
@@ -139,11 +148,15 @@ public class NodeBuilder {
     return null;
   }
 
+  // overriden in NodeBuilderImplicit
+  protected NodeBuilder getChildBuilder(String childId){
+    return new NodeBuilder(this.collection, childId, this.instantiator, this.bActive);
+  }
+
   private void createChildStructure(Model childModel){
-    // System.out.println("CREATE CHILD STRUCTURE: "+childModel.getId());
 
     // create builder
-    NodeBuilder childBuilder = new NodeBuilder(this.collection, childModel.getId());
+    NodeBuilder childBuilder = this.getChildBuilder(childModel.getId());
     childBuilder.setInstantiator(instantiator);
     childBuilder.setActive(isActive());
 

@@ -30,9 +30,7 @@ public class Builder {
   }
 
   public Node createNode(String nodeId, boolean activeBuilder){
-    NodeBuilder nodeBuilder = new NodeBuilder(layoutCollection, nodeId);
-    nodeBuilder.setInstantiator(instantiator);
-    nodeBuilder.setActive(activeBuilder);
+    NodeBuilder nodeBuilder = new NodeBuilder(layoutCollection, nodeId, instantiator, activeBuilder);
 
     // if active store NodeBuilder internally so it doesn't expire
     if(activeBuilder){
