@@ -48,8 +48,12 @@ public class NodeBuilder {
     // (recursive!) and add it to our node.
     collection.each((Model mod) -> {
       // child of us?
-      if(this.isDirectChild(mod, nodeModel))
-        createChildStructure(mod);
+      if(this.isDirectChild(mod, nodeModel)) {
+    	  if(instantiator.isExtender(mod))
+    		  instantiator.extend(this.createdNode, mod);
+    	  else
+    		  createChildStructure(mod);
+      }
     });
 
     return createdNode;

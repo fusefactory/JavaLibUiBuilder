@@ -3,6 +3,7 @@ package com.fuse.ui.builder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Function;
+import java.util.function.BiConsumer;
 import com.fuse.cms.Model;
 import com.fuse.cms.ModelCollection;
 import com.fuse.ui.Node;
@@ -47,6 +48,10 @@ public class Builder {
 
   public void setTypeInstantiator(String typeValue, Function<Model, Node> func){
     instantiator.setTypeInstantiator(typeValue, func);
+  }
+  
+  public void setTypeExtender(String typeValue, BiConsumer<Node, Model> func) {
+	  this.instantiator.setTypeExtender(typeValue, func);
   }
 
   public void setUseImplicitBuilder(boolean enable){
