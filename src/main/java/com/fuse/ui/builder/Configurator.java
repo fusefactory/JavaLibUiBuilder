@@ -20,6 +20,14 @@ public class Configurator {
     return this.configs;
   }
 
+  public void setUseActiveTransformations(boolean active){
+    this.bActive = active;
+  }
+
+  public boolean getUseActiveTransformations(){
+    return this.bActive;
+  }
+
   public void cfg(Node n, String configId){
     this.apply(configId, (ModelBase m) -> {
       m.with("name", (String val) -> n.setName(val));
@@ -85,7 +93,7 @@ public class Configurator {
     });
   }
 
-  private void apply(String configId, Consumer<ModelBase> func){
+  protected void apply(String configId, Consumer<ModelBase> func){
     this.configs.findById(configId, true).transform(func, this.bActive);
   }
 

@@ -23,9 +23,9 @@ For more info on jitpack see;
 
 
 ## Classes
-This package consists of four small classes (see the [javadocs](https://fusefactory.github.io/JavaLibUiBuilder/site/apidocs/index.html) for more information), but there is only one you really need to know about to use it;
+This package consists of five small classes (see the [javadocs](https://fusefactory.github.io/JavaLibUiBuilder/site/apidocs/index.html) for more information), but there are only two you really need to know about to use it;
 * com.fuse.ui.builder.Builder
-
+* com.fuse.ui.builder.Configurator
 
 
 ## Dependencies
@@ -137,19 +137,43 @@ The default builder in this package supports the Node classes in the JavaLibUi p
 As the last instantiator in the above example demonstrates; it might be tempting to use shorter names sometimes, but since the data in the json is tightly coupled to the code, using this builder technique is already a debatable practice; you should try to do anything you can to make it clear how the json data relates to your code.
 
 
-## Usage suggestion: a configurator class
-```java
+## Usage: Configurator and custom Builder class for CSS-like dynamic configurations
 
-  class Configurator {
-    public void cfg(Node n, Model m){
-      // TODO
+Create your own Configurator class (this package includes a 'example' Configurator class which supports configuration of basic Node properties), which you could extend to support your own custom Node classes.
+
+Note that of course you are also free to create your own Configurator class, it's not necessary at all to inherit from the Configurator class in this package.
+
+Note also that the configurator class can very well be used for non-Node type objects as well...
+
+```java
+  class Configurator extends com.fuse.ui.builder.Configurator {
+
+    private PApplet papplet;
+
+    public Configurator(PApplet papplet){
+      this.papplet = papplet;
     }
 
-    public void cfg(ImageNode n, Model m){
-      this.cfg((Node)n); // first apply all Node configurations
+    public void cfg(ImageNode n, String configId){
+      // first apply all the default configurator's configruations
+      super.cfg(n, configId);
 
-      m.transform((ModelBase m) -> {
-        n.setImage(customImageLoaderMethod(m.get("image")));
+      // now for the more intersting stuff...
+      this.apply(configId, (ModelBase m) -> {
+        // you'd probably want to make a smarter and safer image loader...
+        m.with("image", (String val) -> n.setImage(this.papplet.loadImage(val));
+      });
+    }
+
+    // configuration method for our custom node
+    public void cfg(MyCustomNode n, String configId){
+      // first apply all the default Configurator's Node-specific configurations
+      super.cfg((Node)n, configId);
+
+      // now our MyCustomNode-specific configs
+      this.apply(configId, (ModelBase m) -> {
+        // you'd probably want to make a smarter and safer image loader...
+        m.with("foo", (String val) -> n.setFoo(val);
       });
     }
   }
@@ -162,16 +186,13 @@ As the last instantiator in the above example demonstrates; it might be tempting
       this.getLayoutCollection().loadJsonFromFile("data/ui.json");
       this.setUseImplicitBuilder(true); // this should become default
 
-      this.configurator = new Configurator();
-
       // register custom instantiator lambda for
       this.setTypeInstantiator("Node", (Model model) -> {
         // create our Node instance
         Node n = new Node();
-        // make non-interactive by default
-        n.setInteractive(false);
         // configure the node
-        this.configurator.cfg(n, model.getId());
+        if(this.configurator != null)
+          this.configurator.cfg(n, model.getId());
         // return the instantiated node
         return n;
       });
@@ -179,11 +200,10 @@ As the last instantiator in the above example demonstrates; it might be tempting
       // overwrite the default instantiator for the ImageNode  type
       this.setTypeInstantiator("ImageNode", (Model model) -> {
         // create our Node instance
-        Node n = new ImageNode();
-        // make non-interactive by default
-        n.setInteractive(false);
+        ImageNode n = new ImageNode();
         // configure the node
-        this.configurator.cfg(n, model.getId());
+        if(this.configurator != null)
+          this.configurator.cfg(n, model.getId());
         // return the instantiated node
         return n;
       });
@@ -191,16 +211,39 @@ As the last instantiator in the above example demonstrates; it might be tempting
       // create an instantiator for a custom type. For readability It is strongly recommended
       // to keep the 'type' value and the instantiated class name the same
       this.setTypeInstantiator("MyCustomNode", (Model model) -> {
-        MyCustomNode n = new MyCustomNode(); // obviously, MyCustomNode has to extend the Node class
-        n.setInteractive(false);
-
-        this.configurator.cfg(n, model.getId());
+        // instantiate
+        MyCustomNode n = new MyCustomNode(); // obviously, MyCustomNode has to extend
+        // configure
+        if(this.configurator != null)
+          this.configurator.cfg(n, model.getId());
+        // return
+        return n;
+      });
 
       // etc.
       // etc.
     }
+
+    public void setConfigurator(Configurator configurator){
+      this.configurator = configurator;
+    }
   }
 ```
+
+The above Builder/Configurator example will allow you to have the following data which not only provides a UI-hierarchy structure, but also configures basic properties of all nodes AND allows you to dynamically update those properties at runtime when you reload the json into the data collection.
+
+```json
+  [
+    {"id":"SomeScreen.menu","pos":"800,600"},
+    {"id":"SomeScreen.menu.msg", "type":"TextNode", "pos":"100,30", "size":"600,400", "name":"msg"},
+    {"id":"SomeScreen.menu.buttonOk": "type":"RectNode", "pos":"100,450", "size":"200,50", "color":"0,255,0", "interactive":true, "name":"buttonOk"},
+    {"id":"SomeScreen.menu.buttonOk.text": "type":"TextNode", "pos":"10,10", "size":"80,30", "text":"Ok"},
+    {"id":"SomeScreen.menu.buttonCancel": "type":"RectNode", "pos":"320,450", "size":"200,50", "color":"255,0,0", "interactive":true, "name":"buttonCancel"},
+    {"id":"SomeScreen.menu.buttonCancel.text": "type":"TextNode", "pos":"10,10", "size":"80,30", "text":"Abort"},
+  ]
+```
+
+Instantiate the above structure + preconfigured nodes using: ``` builder.createNode("SomeScreen.menu"); ```
 
 ## About implicit builders and non-implicit builders
 
