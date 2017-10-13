@@ -84,8 +84,71 @@ You can use the builder class to load and use that data for generating UI struct
     // of course you will still need to add them to your scene:
     mySceneNode.addChild(pageNode);
     mySceneNode.addChild(menuNode);
+
+    // don't forget to populate your nodes with data and to add your event-handlers
   }
 ```
 
-# USAGE: NON-implicit builder
-_TODO_
+# USAGE: Supporting custom Node types
+
+The default builder in this package supports the Node classes in the JavaLibUi package. To support your own custom Node classes you'll have to register new instantiators.
+
+```java
+  class Builder extends com.fuse.ui.builder.Builder {
+
+    public Builder(){
+      this.getLayoutCollection().loadJsonFromFile("data/ui.json");
+      this.setUseImplicitBuilder(true); // this should become default
+
+      // register custom instantiator lambda for
+      this.setTypeInstantiator("Node", (Model model) -> {
+        return new Node();
+      });
+
+      // overwrite the default instantiator for the ImageNode  type
+      this.setTypeInstantiator("ImageNode", (Model model) -> {
+        return new ImageNode();
+      });
+
+      // create an instantiator for a custom type.
+      // For readability I strongly recommend to use the class name as 'type' value
+      this.setTypeInstantiator("MyCustomNode", (Model model) -> {
+        return new MyCustomNode(); // obviously, MyCustomNode has to extend the Node;
+      });
+    }
+  }
+```
+
+# About implicit builders and non-implicit builders
+
+##### Implicit builder
+In the below data, according to the "implicit builder", button1, button2 and button3 are considered children of HomePage.menu because they start with the
+full HomePage.menu ID, followed by a dot ('.'). Therefore button4 is not a child of HomePage.menu, but a child of 'HomePage'.
+
+'HomePage' isn't explicitly defined but trying to build it will just default to Node and find the button4 child to add to it.
+
+```json
+  [
+    {"id":"HomePage.menu"},
+    {"id":"HomePage.menu.button1"},
+    {"id":"HomePage.menu.button2"},
+    {"id":"HomePage.menu.button3"},
+    {"id":"HomePage.button4"},
+  ]
+```
+
+##### Non-implicit (aka explicit) builder (not recommended but default for now)
+
+In the below data, according to the "NON-implicit builder", only button1, button2 and button4 are considered children of the HomePage.menu node configuration (for reasons that should be obvious).
+
+```json
+  [
+    {"id":"HomePage.menu"},
+    {"id":"HomePage.menu.button1", "parent":"HomePage.menu"},
+    {"id":"HomePage.menu.button2", "parent":"HomePage.menu"},
+    {"id":"HomePage.menu.button3"},
+    {"id":"HomePage.button4", "parent":"HomePage.menu"},
+  ]
+```
+
+Note that though the explicit style helps avoiding unintentional relationships, it also causes a LOT more redundant data that clutters the json. Therefore the implicit-style is recommended, which has the added advantage of enforcing clean and consistent naming conventions.
