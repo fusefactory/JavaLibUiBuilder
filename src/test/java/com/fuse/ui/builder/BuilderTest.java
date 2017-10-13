@@ -112,4 +112,8 @@ public class BuilderTest {
     assertEquals(n.getChildNodes().get(2).getChildNodes().get(0).getClass(), TextNode.class);
     assertEquals(n.getChildNodes().get(2).getChildNodes().size(), 1);
   }
+
+  @Ignore @Test public void supportedDefaultTypes(){
+    // TODO
+  }
 }

@@ -10,6 +10,9 @@ import com.fuse.ui.Node;
 import com.fuse.ui.LineNode;
 import com.fuse.ui.TextNode;
 import com.fuse.ui.ImageNode;
+import com.fuse.ui.RectNode;
+import com.fuse.ui.LambdaNode;
+import com.fuse.ui.EventNode;
 
 public class Instantiator {
   private Map<String, Function<Model, Node>> typeInstatiators = null;
@@ -39,24 +42,13 @@ public class Instantiator {
     String typ = model.get("type", "Node");
 
     Node n = null;
-
-    if(typ.equals("TextNode")){
-      n = new TextNode();
-    }
-
-    if(n == null && typ.equals("LineNode")){
-      n = new LineNode();
-    }
-
-    if(n == null && typ.equals("ImageNode")){
-      n = new ImageNode();
-      // configurator?
-      return n;
-    }
-
-    if(n == null){ //typ.equals("Node")){
-      n = new Node();
-    }
+    if(typ.equals("TextNode")) n = new TextNode();
+    if(n == null && typ.equals("LineNode")) n = new LineNode();
+    if(n == null && typ.equals("ImageNode")) n = new ImageNode();
+    if(n == null && typ.equals("RectNode")) n = new RectNode();
+    if(n == null && typ.equals("LambdaNode")) n = new LambdaNode();
+    if(n == null && typ.equals("EventNode")) n = new EventNode();
+    if(n == null) n = new Node(); //typ.equals("Node")){
 
     if(model.has("name"))
       n.setName(model.get("name"));
@@ -74,7 +66,7 @@ public class Instantiator {
 	  boolean result = this.typeExtenders != null && this.typeExtenders.get(model.get("type", "Node")) != null;
 	  return result;
   }
-  
+
   public void extend(Node n, Model m) {
 	  this.typeExtenders.get(m.get("type", "Node")).accept(n, m);
   }
