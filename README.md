@@ -1,4 +1,4 @@
-# JavaLibUi
+# JavaLibUiBuilder
 
 [![Build Status](https://travis-ci.org/fusefactory/JavaLibUiBuilder.svg?branch=master)](https://travis-ci.org/fusefactory/JavaLibUi)
 
