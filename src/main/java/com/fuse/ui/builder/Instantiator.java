@@ -1,6 +1,7 @@
 package com.fuse.ui.builder;
 
 import java.util.function.Function;
+import java.util.function.BiConsumer;
 import java.util.Map;
 import java.util.HashMap;
 import com.fuse.cms.Model;
@@ -12,6 +13,7 @@ import com.fuse.ui.ImageNode;
 
 public class Instantiator {
   private Map<String, Function<Model, Node>> typeInstatiators = null;
+  private Map<String, BiConsumer<Node, Model>> typeExtenders = null;
 
   public Node createNode(Model model){
     String typ = model.get("type", "Node");
@@ -60,5 +62,20 @@ public class Instantiator {
       n.setName(model.get("name"));
 
     return n;
+  }
+
+  public void setTypeExtender(String typeValue, BiConsumer<Node, Model> func) {
+	  if(this.typeExtenders == null)
+		  this.typeExtenders = new HashMap<>();
+	  this.typeExtenders.put(typeValue, func);
+  }
+
+  public boolean isExtender(Model model) {
+	  boolean result = this.typeExtenders != null && this.typeExtenders.get(model.get("type", "Node")) != null;
+	  return result;
+  }
+  
+  public void extend(Node n, Model m) {
+	  this.typeExtenders.get(m.get("type", "Node")).accept(n, m);
   }
 }

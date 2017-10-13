@@ -3,6 +3,7 @@ package com.fuse.ui.builder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Function;
+import java.util.function.BiConsumer;
 import com.fuse.cms.Model;
 import com.fuse.cms.ModelCollection;
 import com.fuse.ui.Node;
@@ -11,6 +12,7 @@ public class Builder {
   private ModelCollection layoutCollection;
   private List<NodeBuilder> activeNodeBuilders;
   private Instantiator instantiator;
+  private boolean bUseImplicitBuilder = false;
 
   public Builder(){
     layoutCollection = new ModelCollection();
@@ -30,9 +32,9 @@ public class Builder {
   }
 
   public Node createNode(String nodeId, boolean activeBuilder){
-    NodeBuilder nodeBuilder = new NodeBuilder(layoutCollection, nodeId);
-    nodeBuilder.setInstantiator(instantiator);
-    nodeBuilder.setActive(activeBuilder);
+    NodeBuilder nodeBuilder = bUseImplicitBuilder ?
+      new NodeBuilderImplicit(layoutCollection, nodeId, instantiator, activeBuilder) :
+      new NodeBuilder(layoutCollection, nodeId, instantiator, activeBuilder);
 
     // if active store NodeBuilder internally so it doesn't expire
     if(activeBuilder){
@@ -46,5 +48,17 @@ public class Builder {
 
   public void setTypeInstantiator(String typeValue, Function<Model, Node> func){
     instantiator.setTypeInstantiator(typeValue, func);
+  }
+  
+  public void setTypeExtender(String typeValue, BiConsumer<Node, Model> func) {
+	  this.instantiator.setTypeExtender(typeValue, func);
+  }
+
+  public void setUseImplicitBuilder(boolean enable){
+    bUseImplicitBuilder = enable;
+  }
+
+  public boolean getUseImplicitBuilder(){
+    return bUseImplicitBuilder;
   }
 }
