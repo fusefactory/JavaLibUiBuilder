@@ -237,13 +237,35 @@ The above Builder/Configurator example will allow you to have the following data
     {"id":"SomeScreen.menu","pos":"800,600"},
     {"id":"SomeScreen.menu.msg", "type":"TextNode", "pos":"100,30", "size":"600,400", "name":"msg"},
     {"id":"SomeScreen.menu.buttonOk": "type":"RectNode", "pos":"100,450", "size":"200,50", "color":"0,255,0", "interactive":true, "name":"buttonOk"},
-    {"id":"SomeScreen.menu.buttonOk.text": "type":"TextNode", "pos":"10,10", "size":"80,30", "text":"Ok"},
-    {"id":"SomeScreen.menu.buttonCancel": "type":"RectNode", "pos":"320,450", "size":"200,50", "color":"255,0,0", "interactive":true, "name":"buttonCancel"},
-    {"id":"SomeScreen.menu.buttonCancel.text": "type":"TextNode", "pos":"10,10", "size":"80,30", "text":"Abort"},
+    {"id":"SomeScreen.menu.buttonOk.text", "type":"TextNode", "pos":"10,10", "size":"80,30", "text":"Ok"},
+    {"id":"SomeScreen.menu.buttonCancel", "type":"RectNode", "pos":"320,450", "size":"200,50", "color":"255,0,0", "interactive":true, "name":"buttonCancel"},
+    {"id":"SomeScreen.menu.buttonCancel.text", "type":"TextNode", "pos":"10,10", "size":"80,30", "text":"Abort"},
   ]
 ```
 
-Instantiate the above structure + preconfigured nodes using: ``` builder.createNode("SomeScreen.menu"); ```
+Instantiate the above structure + preconfigured nodes using: ```builder.createNode("SomeScreen.menu"); ```
+
+The populate it with data and add event handlers and you are good to go:
+
+```java
+  class Menu {
+    void create(String message){
+      Node menuNode = builder.createNode("SomeScreen.menu");
+      menuNode.withChild("msg", (Node n) -> ((TextNode)n).setText(message));
+      menuNode.withChild("buttonOk", (Node n) -> n.touchClickEvent.whenTriggered(() -> this.submit()));
+      menuNode.withChild("buttonOk", (Node n) -> n.touchClickEvent.whenTriggered(() -> this.cancel()));
+      return menuNode;
+    }
+
+    void submit(){
+      // trigger notification, perform action, whatever
+    }
+
+    void cancel(){
+      // trigger notification, perform action, whatever
+    }
+  }
+```
 
 ## About implicit builders and non-implicit builders
 
