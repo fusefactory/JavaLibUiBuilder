@@ -9,14 +9,15 @@ import com.fuse.cms.ModelCollection;
 import com.fuse.ui.Node;
 
 public class Builder {
-  private ModelCollection layoutCollection;
-  private List<NodeBuilder> activeNodeBuilders;
-  private Instantiator instantiator;
+  private ModelCollection layoutCollection = new ModelCollection();
+  private Instantiator instantiator = new Instantiator();
+  private List<NodeBuilder> activeNodeBuilders = null;
+
+  // configurables
   private boolean bUseImplicitBuilder = false;
 
   public Builder(){
-    layoutCollection = new ModelCollection();
-    instantiator = new Instantiator();
+    this.setUseImplicitBuilder(true);
   }
 
   public ModelCollection getLayoutCollection(){
@@ -49,7 +50,7 @@ public class Builder {
   public void setTypeInstantiator(String typeValue, Function<Model, Node> func){
     instantiator.setTypeInstantiator(typeValue, func);
   }
-  
+
   public void setTypeExtender(String typeValue, BiConsumer<Node, Model> func) {
 	  this.instantiator.setTypeExtender(typeValue, func);
   }

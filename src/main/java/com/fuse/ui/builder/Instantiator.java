@@ -17,18 +17,27 @@ import com.fuse.ui.EventNode;
 public class Instantiator {
   private Map<String, Function<Model, Node>> typeInstatiators = null;
   private Map<String, BiConsumer<Node, Model>> typeExtenders = null;
+  private Configurator configurator = new Configurator();
 
   public Node createNode(Model model){
+    Node n = null;
+
     String typ = model.get("type", "Node");
 
     if(typeInstatiators != null){
       Function<Model, Node> func = typeInstatiators.get(typ);
       if(func != null){
-        return func.apply(model);
+        n = func.apply(model);
       }
     }
 
-    return Instantiator.defaultInstantiator(model);
+    if(n == null)
+      n = Instantiator.defaultInstantiator(model);
+
+    if(this.configurator != null)
+      this.configurator.cfg(n, model);
+
+    return n;
   }
 
   public void setTypeInstantiator(String typeValue, Function<Model, Node> func){
