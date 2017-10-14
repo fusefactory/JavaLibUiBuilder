@@ -91,4 +91,8 @@ public class InstantiatorTest {
     assertEquals(minX, 82.0f, 2.0f); // from 80 (100.0 - 20.0)...
     assertEquals(maxX, 118.0f, 2.0f); // ... to 120.0 (100.0+20.0)
   }
+
+  @Ignore @Test public void createNode_defaultExtensions(){
+    // todo...
+  }
 }

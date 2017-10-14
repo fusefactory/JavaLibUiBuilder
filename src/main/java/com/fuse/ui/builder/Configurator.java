@@ -9,6 +9,7 @@ import processing.core.PGraphics;
 
 import com.fuse.cms.*;
 import com.fuse.ui.*;
+import com.fuse.ui.extensions.*;
 
 public class Configurator {
 
@@ -29,6 +30,8 @@ public class Configurator {
     return this.bActive;
   }
 
+
+  // Node configurator methods
 
   public void cfg(Node n, String configId){
     this.cfg(n, this.configs.findById(configId, true));
@@ -184,6 +187,112 @@ public class Configurator {
   }
 
 
+  // ExtensionBase configurator methods
+
+  public void cfg(ExtensionBase e, String configId){
+    this.cfg(e, this.configs.findById(configId, true));
+  }
+
+  public void cfg(ExtensionBase e, Model mod){
+    this.apply(mod, (ModelBase m) -> {
+      m.withBool("enabled", (Boolean v) -> { if(v) e.enable(); else e.disable(); });
+    });
+  }
+
+  public void cfg(TransformerExtension e, String configId){
+    this.cfg(e, this.configs.findById(configId, true));
+  }
+
+  public void cfg(TransformerExtension e, Model mod){
+    this.cfg((ExtensionBase)e, mod);
+
+    this.apply(mod, (ModelBase m) -> {
+      m.withFloat("minPosX", (Float v) -> e.setMinPosX(v));
+      m.withFloat("minPosY", (Float v) -> e.setMinPosY(v));
+      m.withFloat("maxPosX", (Float v) -> e.setMaxPosX(v));
+      m.withFloat("maxPosY", (Float v) -> e.setMaxPosY(v));
+      m.withFloat("minScale", (Float v) -> e.setMinScale(v));
+      m.withFloat("maxScale", (Float v) -> e.setMaxScale(v));
+      m.withFloat("smootValue", (Float v) -> e.setSmoothValue(v));
+      m.withBool("stopOnTouch", (Boolean v) -> e.setStopOnTouch(v));
+      m.withFloat("maxTransformationTime", (Float v) -> e.setMaxTransformationTime(v));
+      m.withFloat("doneScaleDeltaMag", (Float v) -> e.setDoneScaleDeltaMag(v));
+      m.withFloat("donePositionDeltaMag", (Float v) -> e.setDonePositionDeltaMag(v));
+      m.withFloat("doneSizeDeltaMag", (Float v) -> e.setDoneSizeDeltaMag(v));
+      m.withFloat("doneRotationDeltaMag", (Float v) -> e.setDoneRotationDeltaMag(v));
+    });
+  }
+
+  public void cfg(Draggable e, String configId){
+    this.cfg(e, this.configs.findById(configId, true));
+  }
+
+  public void cfg(Draggable e, Model mod){
+    this.cfg((TransformerExtension)e, mod);
+
+    this.apply(mod, (ModelBase m) -> {
+      m.withBool("abortOnSecondTouch", (Boolean v) -> e.setAbortOnSecondTouch(v));
+    });
+  }
+
+  public void cfg(Constrain e, String configId){
+    this.cfg(e, this.configs.findById(configId, true));
+  }
+
+  public void cfg(Constrain e, Model mod){
+    this.cfg((TransformerExtension)e, mod);
+
+    this.apply(mod, (ModelBase m) -> {
+      m.withBool("centerWhenFitting", (Boolean v) -> e.setCenterWhenFitting(v));
+      m.withBool("fillParent", (Boolean v) -> e.setFillParent(v));
+    });
+  }
+
+  public void cfg(PinchZoom e, String configId){
+    this.cfg(e, this.configs.findById(configId, true));
+  }
+
+  public void cfg(PinchZoom e, Model mod){
+    this.cfg((TransformerExtension)e, mod);
+
+    // no custom configs
+    // this.apply(mod, (ModelBase m) -> {
+    //
+    // });
+  }
+
+  public void cfg(DoubleClickZoom e, String configId){
+    this.cfg(e, this.configs.findById(configId, true));
+  }
+
+  public void cfg(DoubleClickZoom e, Model mod){
+    this.cfg((TransformerExtension)e, mod);
+
+    this.apply(mod, (ModelBase m) -> {
+      m.withLong("doubleClickMaxInterval", (Long v) -> e.setDoubleClickMaxInterval(v));
+      if(m.has("scaleFactor")) e.setScaleFactor(getPVector(m, "scaleFactor"));
+    });
+  }
+
+  public void cfg(Swiper e, String configId){
+    this.cfg(e, this.configs.findById(configId, true));
+  }
+
+  public void cfg(Swiper e, Model mod){
+    this.cfg((TransformerExtension)e, mod);
+
+    this.apply(mod, (ModelBase m) -> {
+      m.withBool("snapEnabled", (Boolean v) -> e.setSnapEnabled(v));
+      m.withFloat("snapThrowFactor", (Float v) -> e.setSnapThrowFactor(v));
+      m.withFloat("snapVelocity", (Float v) -> e.setSnapVelocity(v));
+      m.withFloat("snapThrowFactor", (Float v) -> e.setSnapThrowFactor(v));
+      m.withFloat("velocityReductionFactor", (Float v) -> e.setVelocityReductionFactor(v));
+      m.withFloat("dampingFactor", (Float v) -> e.setDampingFactor(v));
+      if(m.has("snapInterval")) e.setSnapInterval(getPVector(m, "snapInterval", new PVector(200,0,0)));
+      if(m.has("minOffset")) e.setMinOffset(getPVector(m, "minOffset", new PVector(0,0,0)));
+      if(m.has("maxOffset")) e.setMaxOffset(getPVector(m, "maxOffset", new PVector(0,0,0)));
+    });
+  }
 
   /// fetch model and apply using lambda
   protected void apply(String configId, Consumer<ModelBase> func){

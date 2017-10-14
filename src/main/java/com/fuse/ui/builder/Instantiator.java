@@ -6,26 +6,25 @@ import java.util.Map;
 import java.util.HashMap;
 import com.fuse.cms.Model;
 
-import com.fuse.ui.Node;
-import com.fuse.ui.LineNode;
-import com.fuse.ui.TextNode;
-import com.fuse.ui.ImageNode;
-import com.fuse.ui.RectNode;
-import com.fuse.ui.LambdaNode;
-import com.fuse.ui.EventNode;
+import com.fuse.ui.*;
+import com.fuse.ui.extensions.*;
 
 public class Instantiator {
-  private Map<String, Function<Model, Node>> typeInstatiators = null;
+  private Map<String, Function<Model, Node>> typeInstantiators = null;
   private Map<String, BiConsumer<Node, Model>> typeExtenders = null;
   private Configurator configurator = new Configurator();
+
+  public Instantiator(){
+    this.registerDefaultExtenders();
+  }
 
   public Node createNode(Model model){
     Node n = null;
 
     String typ = model.get("type", "Node");
 
-    if(typeInstatiators != null){
-      Function<Model, Node> func = typeInstatiators.get(typ);
+    if(typeInstantiators != null){
+      Function<Model, Node> func = typeInstantiators.get(typ);
       if(func != null){
         n = func.apply(model);
       }
@@ -41,13 +40,13 @@ public class Instantiator {
   }
 
   public void setTypeInstantiator(String typeValue, Function<Model, Node> func){
-    if(typeInstatiators == null)
-      typeInstatiators = new HashMap<>();
+    if(typeInstantiators == null)
+      typeInstantiators = new HashMap<>();
 
-    typeInstatiators.put(typeValue, func);
+    typeInstantiators.put(typeValue, func);
   }
 
-  public static Node defaultInstantiator(Model model){
+  private static Node defaultInstantiator(Model model){
     String typ = model.get("type", "Node");
 
     Node n = null;
@@ -58,9 +57,6 @@ public class Instantiator {
     if(n == null && typ.equals("LambdaNode")) n = new LambdaNode();
     if(n == null && typ.equals("EventNode")) n = new EventNode();
     if(n == null) n = new Node(); //typ.equals("Node")){
-
-    if(model.has("name"))
-      n.setName(model.get("name"));
 
     return n;
   }
@@ -77,6 +73,39 @@ public class Instantiator {
   }
 
   public void extend(Node n, Model m) {
-	  this.typeExtenders.get(m.get("type", "Node")).accept(n, m);
+	  this.typeExtenders.get(m.get("type", "BaseExtension")).accept(n, m);
+  }
+
+
+  private void registerDefaultExtenders(){
+    this.setTypeExtender("Draggable", (Node node, Model model) -> {
+      Draggable ext = Draggable.enableFor(node);
+      if(this.configurator != null)
+        this.configurator.cfg(ext, model);
+    });
+
+    this.setTypeExtender("Constrain", (Node node, Model model) -> {
+      Constrain ext = Constrain.enableFor(node);
+      if(this.configurator != null)
+        this.configurator.cfg(ext, model);
+    });
+
+    this.setTypeExtender("PinchZoom", (Node node, Model model) -> {
+      PinchZoom ext = PinchZoom.enableFor(node);
+      if(this.configurator != null)
+        this.configurator.cfg(ext, model);
+    });
+
+    this.setTypeExtender("DoubleClickZoom", (Node node, Model model) -> {
+      DoubleClickZoom ext = DoubleClickZoom.enableFor(node);
+      if(this.configurator != null)
+        this.configurator.cfg(ext, model);
+    });
+
+    this.setTypeExtender("Swiper", (Node node, Model model) -> {
+      Swiper ext = Swiper.enableFor(node);
+      if(this.configurator != null)
+        this.configurator.cfg(ext, model);
+    });
   }
 }
