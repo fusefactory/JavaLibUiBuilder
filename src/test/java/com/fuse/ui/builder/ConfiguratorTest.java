@@ -31,4 +31,24 @@ public class ConfiguratorTest {
     c.cfg(n, "TextNode.1");
     assertEquals(n.getText(), "foo_bar");
   }
+
+  @Test public void Node_percentageSize(){
+    Configurator c = new Configurator();
+    c.getDataCollection().loadJsonFromFile("testdata/ConfiguratorTest.json");
+
+    Node n = new Node();
+    Model m = new Model();
+    m.set("relsize", "80%,50%");
+    c.cfg(n, m);
+    // no parent and no PGraphics instance to derrive size from
+    assertEquals(n.getSize(), new PVector(0.0f, 0.0f, 0.0f));
+
+    Node parent = new Node();
+    parent.setSize(800,600);
+    parent.addChild(n);
+    assertEquals(n.getSize(), new PVector(640.0f, 390.0f, 0.0f));
+
+    parent.setSize(1920,1080);
+    assertEquals(n.getSize(), new PVector(1536.0f, 960.0f, 0.0f));
+  }
 }

@@ -50,13 +50,25 @@ public class Configurator {
 
       if(m.has("pos")) n.setPosition(getPVector(m, "pos"));
       if(m.has("position")) n.setPosition(getPVector(m, "position"));
-      if(m.has("size")) n.setSize(getPVector(m, "size"));
       if(m.has("scale")) n.setScale(getPVector(m, "scale"));
 
       if(bDefaultNodesToNotInteractive)
           n.setInteractive(m.getBool("interactive", false));
       else
         m.withBool("interactive", (Boolean val) -> n.setInteractive(val));
+
+      m.with("relsize", (String val) -> {
+        String[] parts = val.split(",");
+        float x = parts.length < 1 ? 0.0f : Float.parseFloat(parts[0].replace("%",""));
+        float y = parts.length < 2 ? 0.0f : Float.parseFloat(parts[1].replace("%",""));
+        float z = parts.length < 3 ? 0.0f : Float.parseFloat(parts[2].replace("%",""));
+        ParentRelativeTransformer.enableFor(n)
+          .setSizeFactorX(x)
+          .setSizeFactorY(y)
+          .setSizeFactorZ(z);
+      });
+
+      if(m.has("size")) n.setSize(getPVector(m, "size"));
 
       if(m.has("sizeVar")){ // a variation of 10.0f means the size attribute will can go be modified from -10.0 to 10.0
         // variation vector
