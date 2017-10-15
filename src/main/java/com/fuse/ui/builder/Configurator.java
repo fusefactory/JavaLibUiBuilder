@@ -59,9 +59,9 @@ public class Configurator {
 
       m.with("relsize", (String val) -> {
         String[] parts = val.split(",");
-        float x = parts.length < 1 ? 0.0f : Float.parseFloat(parts[0].replace("%",""));
-        float y = parts.length < 2 ? 0.0f : Float.parseFloat(parts[1].replace("%",""));
-        float z = parts.length < 3 ? 0.0f : Float.parseFloat(parts[2].replace("%",""));
+        float x = parts.length < 1 ? 0.0f : Float.parseFloat(parts[0].replace("%",""))/100.0f;
+        float y = parts.length < 2 ? 0.0f : Float.parseFloat(parts[1].replace("%",""))/100.0f;
+        float z = parts.length < 3 ? 0.0f : Float.parseFloat(parts[2].replace("%",""))/100.0f;
         ParentRelativeTransformer.enableFor(n)
           .setSizeFactorX(x)
           .setSizeFactorY(y)
