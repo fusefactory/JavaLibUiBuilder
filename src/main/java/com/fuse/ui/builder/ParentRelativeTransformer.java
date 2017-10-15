@@ -8,14 +8,15 @@ import com.fuse.ui.extensions.TransformerExtension;
 public class ParentRelativeTransformer extends TransformerExtension {
 
   private Float sizeFactorX,sizeFactorY,sizeFactorZ;
+  private Float posFactorX,posFactorY,posFactorZ;
   private Node activeParent;
 
   public ParentRelativeTransformer(){
+    this.maxTransformationsPerUpdate = 25;
     this.setSmoothValue(0.0f); // disable smoothing by default
   }
 
-  @Override
-  public void enable(){
+  @Override public void setup(){
     if(this.node.getParent() != null)
       this.enableForParent(this.node.getParent());
 
@@ -34,8 +35,7 @@ public class ParentRelativeTransformer extends TransformerExtension {
     }
   }
 
-  @Override
-  public void disable(){
+  @Override public void teardown(){
     this.node.newParentEvent.stopWhenTriggeredCallbacks(this);
     if(this.activeParent != null)
       this.disableForParent(this.activeParent);
@@ -43,6 +43,19 @@ public class ParentRelativeTransformer extends TransformerExtension {
 
   private void disableForParent(Node parent){
     parent.transformationEvent.stopWhenTriggeredCallbacks(this);
+  }
+
+
+  public ParentRelativeTransformer setPosFactorX(Float factor){
+    this.posFactorX = factor; this.apply(); return this;
+  }
+
+  public ParentRelativeTransformer setPosFactorY(Float factor){
+    this.posFactorY = factor; this.apply(); return this;
+  }
+
+  public ParentRelativeTransformer setPosFactorZ(Float factor){
+    this.posFactorZ = factor; this.apply(); return this;
   }
 
   public ParentRelativeTransformer setSizeFactorX(Float factor){
@@ -57,6 +70,7 @@ public class ParentRelativeTransformer extends TransformerExtension {
     this.sizeFactorZ = factor; this.apply(); return this;
   }
 
+
   protected void apply(){
     Node parent = this.activeParent;
     if(parent == null)
@@ -67,6 +81,12 @@ public class ParentRelativeTransformer extends TransformerExtension {
     if(this.sizeFactorY != null) size.y = this.sizeFactorY * parent.getSize().y;
     if(this.sizeFactorZ != null) size.z = this.sizeFactorZ * parent.getSize().z;
     this.transformSize(size);
+
+    PVector pos = this.node.getPosition();
+    if(this.posFactorX != null) pos.x = this.posFactorX * parent.getSize().x;
+    if(this.posFactorY != null) pos.y = this.posFactorY * parent.getSize().y;
+    if(this.posFactorZ != null) pos.z = this.posFactorZ * parent.getSize().z;
+    this.transformPosition(pos);
   }
 
   // static factory methods // // // // //
@@ -78,6 +98,7 @@ public class ParentRelativeTransformer extends TransformerExtension {
       d = new ParentRelativeTransformer();
       n.use(d);
     }
+
     return d;
   }
 

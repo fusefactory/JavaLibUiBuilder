@@ -55,11 +55,20 @@ public class Builder {
 	  this.instantiator.setTypeExtender(typeValue, func);
   }
 
+
   public void setUseImplicitBuilder(boolean enable){
     bUseImplicitBuilder = enable;
   }
 
   public boolean getUseImplicitBuilder(){
     return bUseImplicitBuilder;
+  }
+
+  public void setUseActiveTransformations(boolean active){
+    instantiator.getConfigurator().setUseActiveTransformations(active);
+  }
+
+  public void setDefaultNodesToNotInteractive(boolean active){
+    instantiator.getConfigurator().setDefaultNodesToNotInteractive(active);
   }
 }

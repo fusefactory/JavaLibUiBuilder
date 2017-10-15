@@ -15,6 +15,7 @@ public class Instantiator {
   private Configurator configurator = new Configurator();
 
   public Instantiator(){
+    this.registerDefaultTypeInstantiators();
     this.registerDefaultExtenders();
   }
 
@@ -31,7 +32,7 @@ public class Instantiator {
     }
 
     if(n == null)
-      n = Instantiator.defaultInstantiator(model);
+      n = this.defaultInstantiator(model);
 
     if(this.configurator != null)
       this.configurator.cfg(n, model);
@@ -46,18 +47,10 @@ public class Instantiator {
     typeInstantiators.put(typeValue, func);
   }
 
-  private static Node defaultInstantiator(Model model){
-    String typ = model.get("type", "Node");
-
-    Node n = null;
-    if(typ.equals("TextNode")) n = new TextNode();
-    if(n == null && typ.equals("LineNode")) n = new LineNode();
-    if(n == null && typ.equals("ImageNode")) n = new ImageNode();
-    if(n == null && typ.equals("RectNode")) n = new RectNode();
-    if(n == null && typ.equals("LambdaNode")) n = new LambdaNode();
-    if(n == null && typ.equals("EventNode")) n = new EventNode();
-    if(n == null) n = new Node(); //typ.equals("Node")){
-
+  private Node defaultInstantiator(Model model){
+    Node n = new Node(); //typ.equals("Node")){
+    if(this.configurator != null)
+      this.configurator.cfg(n, model);
     return n;
   }
 
@@ -76,6 +69,54 @@ public class Instantiator {
 	  this.typeExtenders.get(m.get("type", "BaseExtension")).accept(n, m);
   }
 
+  public Configurator getConfigurator(){
+    return this.configurator;
+  }
+
+
+  private void registerDefaultTypeInstantiators(){
+    this.setTypeInstantiator("Node", (Model model) -> {
+      Node node = new Node();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
+    this.setTypeInstantiator("TextNode", (Model model) -> {
+      TextNode node = new TextNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
+    this.setTypeInstantiator("ImageNode", (Model model) -> {
+      ImageNode node = new ImageNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
+    this.setTypeInstantiator("RectNode", (Model model) -> {
+      RectNode node = new RectNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
+    this.setTypeInstantiator("LambdaNode", (Model model) -> {
+      LambdaNode node = new LambdaNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
+    this.setTypeInstantiator("EventNode", (Model model) -> {
+      EventNode node = new EventNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+  }
 
   private void registerDefaultExtenders(){
     this.setTypeExtender("Draggable", (Node node, Model model) -> {

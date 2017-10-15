@@ -30,6 +30,13 @@ public class Configurator {
     return this.bActive;
   }
 
+  public void setDefaultNodesToNotInteractive(boolean set){
+    bDefaultNodesToNotInteractive = set;
+  }
+
+  public boolean getDefaultNodesToNotInteractive(){
+    return bDefaultNodesToNotInteractive;
+  }
 
   // Node configurator methods
 
@@ -39,34 +46,55 @@ public class Configurator {
 
   public void cfg(Node n, Model mod){
     this.apply(mod, (ModelBase m) -> {
-      m.with("name", (String val) -> n.setName(val));
-      m.withFloat("width", (Float val) -> n.setWidth(val));
-      m.withFloat("height", (Float val) -> n.setHeight(val));
-      m.withFloat("x", (Float val) -> n.setX(val));
-      m.withFloat("y", (Float val) -> n.setY(val));
-      m.withFloat("plane", (Float val) -> n.setPlane(val));
-      m.withBool("clipping", (Boolean val) -> n.setClipContent(val));
-      m.withBool("visible", (Boolean val) -> n.setVisible(val));
-
-      if(m.has("pos")) n.setPosition(getPVector(m, "pos"));
-      if(m.has("position")) n.setPosition(getPVector(m, "position"));
-      if(m.has("scale")) n.setScale(getPVector(m, "scale"));
-
       if(bDefaultNodesToNotInteractive)
           n.setInteractive(m.getBool("interactive", false));
       else
         m.withBool("interactive", (Boolean val) -> n.setInteractive(val));
 
-      m.with("relsize", (String val) -> {
-        String[] parts = val.split(",");
-        float x = parts.length < 1 ? 0.0f : Float.parseFloat(parts[0].replace("%",""))/100.0f;
-        float y = parts.length < 2 ? 0.0f : Float.parseFloat(parts[1].replace("%",""))/100.0f;
-        float z = parts.length < 3 ? 0.0f : Float.parseFloat(parts[2].replace("%",""))/100.0f;
-        ParentRelativeTransformer.enableFor(n)
-          .setSizeFactorX(x)
-          .setSizeFactorY(y)
-          .setSizeFactorZ(z);
+      m.with("name", (String val) -> n.setName(val));
+      m.withFloat("plane", (Float val) -> n.setPlane(val));
+      m.withBool("clipping", (Boolean val) -> n.setClipContent(val));
+      m.withBool("visible", (Boolean val) -> n.setVisible(val));
+      if(m.has("pos")) n.setPosition(getPVector(m, "pos"));
+      if(m.has("position")) n.setPosition(getPVector(m, "position"));
+      if(m.has("scale")) n.setScale(getPVector(m, "scale"));
+
+      m.with("x", (String val) -> {
+        if(val.endsWith("%")){
+          float f = Float.parseFloat(val.replace("%",""))/100.0f;
+          ParentRelativeTransformer.enableFor(n).setPosFactorX(f);
+        } else {
+          n.setX(m.getFloat("x"));
+        }
       });
+
+      m.with("y", (String val) -> {
+        if(val.endsWith("%")){
+          float f = Float.parseFloat(val.replace("%",""))/100.0f;
+          ParentRelativeTransformer.enableFor(n).setPosFactorY(f);
+        } else {
+          n.setY(m.getFloat("y"));
+        }
+      });
+
+      m.with("width", (String val) -> {
+        if(val.endsWith("%")){
+          float f = Float.parseFloat(val.replace("%",""))/100.0f;
+          ParentRelativeTransformer.enableFor(n).setSizeFactorX(f);
+        } else {
+          n.setWidth(m.getFloat("width"));
+        }
+      });
+
+      m.with("height", (String val) -> {
+        if(val.endsWith("%")){
+          float f = Float.parseFloat(val.replace("%",""))/100.0f;
+          ParentRelativeTransformer.enableFor(n).setSizeFactorY(f);
+        } else {
+          n.setHeight(m.getFloat("height"));
+        }
+      });
+
 
       if(m.has("size")) n.setSize(getPVector(m, "size"));
 
@@ -313,9 +341,9 @@ public class Configurator {
 
   /// apply lambda using data from model
   protected void apply(Model m, Consumer<ModelBase> func){
-    m.transform(func, this.bActive);
+    if(this.bActive) m.stopTransform(this);
+    m.transform(func, this, this.bActive);
   }
-
 
   // static helper methods // // // // //
 

@@ -18,6 +18,7 @@ sourceSets {
     main {
          java {
              srcDir sourceSets.main.java.srcDirs + '../src/main/java'
+             srcDir sourceSets.main.java.srcDirs + '../lib/JavaLibUi/src/main/java'
         }
     }
 }
@@ -31,7 +32,7 @@ repositories {
 
 dependencies {
     compile group: 'com.github.fusefactory', name: 'JavaLibCms', version:'1.1.5'
-    compile group: 'com.github.fusefactory', name: 'JavaLibUi', version:'1.1.0'
+    // compile group: 'com.github.fusefactory', name: 'JavaLibUi', version:'1.1.0'
     compile group: 'org.processing', name: 'core', version:'3.2.3'
     // testCompile group: 'junit', name: 'junit', version:'4.12'
 }

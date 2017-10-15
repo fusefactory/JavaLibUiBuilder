@@ -1,0 +1,9 @@
+[
+  {"id":"Page1","type":"RectNode","x":"10%","y":"10%","width":"80%","height":"80%","color":"200,0,100","interactive":true},
+  {"id":"Page1.titlebar","type":"RectNode","width":"100%","height":30,"color":"255,255,255,100","interactive":true,"name":"titlebar"},
+  {"id":"Page1.titlebar.title","type":"TextNode","pos":"5,3","width":"90%","height":25,"text":"Title","textSize":18},
+  {"id":"Page1.Draggable","type":"Draggable"},
+
+  {"id":"Page1.btnOk","type":"RectNode","x":"45%","y":"90%","size":"150,40","color":"0,255,0,100","name":"btnOk","interactive":true},
+  {"id":"Page1.btnCancel","type":"RectNode","x":"70%","y":"90%","size":"150,40","color":"100,0,0,100","name":"btnCancel","interactive":true},
+]
