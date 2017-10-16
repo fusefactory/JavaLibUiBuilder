@@ -157,5 +157,9 @@ public class Instantiator {
       if(this.configurator != null)
         this.configurator.cfg(ext, model);
     });
+
+    this.setTypeExtender("TouchEventForwarder", (Node node, Model model) -> {
+      TouchEventForwarder.enableForChildNames(node, model.get("children", "").split(","));
+    });
   }
 }
