@@ -2,7 +2,8 @@ package com.fuse.ui.builder;
 
 import java.util.Random;
 import java.util.function.Consumer;
-
+import java.util.Map;
+import java.util.HashMap;
 import processing.core.PApplet;
 import processing.core.PVector;
 import processing.core.PGraphics;
@@ -30,6 +31,9 @@ public class Configurator {
 
   public void setUseActiveTransformations(boolean active){
     this.bActive = active;
+    if(this.bActive){
+      System.err.println("ConfiguratorsetUseActiveTransformations; active transformation enabled. USE ONLY IN DEVELOPMENT.");
+    }
   }
 
   public boolean getUseActiveTransformations(){
@@ -347,8 +351,15 @@ public class Configurator {
 
   /// apply lambda using data from model
   protected void apply(Model m, Consumer<ModelBase> func){
-    if(this.bActive) m.stopTransform(this);
-    m.transform(func, this, this.bActive);
+    this.apply(m, this, func);
+  }
+
+  protected void apply(Model m, Object owner, Consumer<ModelBase> func){
+    // if(this.bActive){
+    //   m.stopTransform(owner);
+    // }
+
+    m.transform(func, owner, this.bActive);
   }
 
   // static helper methods // // // // //
