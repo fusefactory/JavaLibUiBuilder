@@ -42,7 +42,8 @@ public class ConfiguratorTest {
     parent.addChild(n);
 
     Model m = new Model();
-    m.set("relsize", "80%,50%");
+    m.set("width", "80%");
+    m.set("height", "50%");
     c.cfg(n, m);
     assertEquals(n.getSize(), new PVector(640.0f, 300.0f, 0.0f));
     parent.setSize(1920,1080);
