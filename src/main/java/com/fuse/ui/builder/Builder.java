@@ -9,24 +9,29 @@ import com.fuse.cms.ModelCollection;
 import com.fuse.ui.Node;
 
 public class Builder {
-  private ModelCollection layoutCollection = new ModelCollection();
+  private ModelCollection layoutCollection;
   private Instantiator instantiator = new Instantiator();
   private List<NodeBuilder> activeNodeBuilders = null;
 
   // configurables
-  private boolean bUseImplicitBuilder = false;
+  private boolean bUseImplicitBuilder = true;
+
+  // lifecycle methods
 
   public Builder(){
-    this.setUseImplicitBuilder(true);
+    this.setLayoutCollection(new ModelCollection());
   }
 
-  public ModelCollection getLayoutCollection(){
-    return layoutCollection;
+  public Builder(ModelCollection layoutCollection){
+    this.setLayoutCollection(layoutCollection);
   }
 
-  public void setLayoutCollection(ModelCollection newCol){
-    layoutCollection = newCol;
+  public Builder(ModelCollection layoutCollection, Configurator configurator){
+    this.setLayoutCollection(layoutCollection);
+    this.setConfigurator(configurator);
   }
+
+  // operation methods
 
   public Node createNode(String nodeId){
     return createNode(nodeId, false /* not active */);
@@ -47,6 +52,8 @@ public class Builder {
     return nodeBuilder.createNode();
   }
 
+  // config methods
+
   public void setTypeInstantiator(String typeValue, Function<Model, Node> func){
     instantiator.setTypeInstantiator(typeValue, func);
   }
@@ -55,6 +62,14 @@ public class Builder {
 	  this.instantiator.setTypeExtender(typeValue, func);
   }
 
+  public void setLayoutCollection(ModelCollection newCol){
+    this.layoutCollection = newCol;
+    this.instantiator.getConfigurator().setDataCollection(newCol);
+  }
+
+  public ModelCollection getLayoutCollection(){
+    return layoutCollection;
+  }
 
   public void setUseImplicitBuilder(boolean enable){
     bUseImplicitBuilder = enable;
@@ -70,5 +85,9 @@ public class Builder {
 
   public void setDefaultNodesToNotInteractive(boolean active){
     instantiator.getConfigurator().setDefaultNodesToNotInteractive(active);
+  }
+
+  public void setConfigurator(Configurator configurator){
+    this.instantiator.setConfigurator(configurator);
   }
 }

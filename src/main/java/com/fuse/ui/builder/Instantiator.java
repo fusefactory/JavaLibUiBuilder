@@ -19,6 +19,8 @@ public class Instantiator {
     this.registerDefaultExtenders();
   }
 
+  // operation methods
+
   public Node createNode(Model model){
     Node n = null;
 
@@ -40,6 +42,20 @@ public class Instantiator {
     return n;
   }
 
+  public void extend(Node n, Model m) {
+	  this.typeExtenders.get(m.get("type", "BaseExtension")).accept(n, m);
+  }
+
+  // config methods
+
+  public Configurator getConfigurator(){
+    return this.configurator;
+  }
+
+  public void setConfigurator(Configurator configurator){
+    this.configurator = configurator;
+  }
+
   public void setTypeInstantiator(String typeValue, Function<Model, Node> func){
     if(typeInstantiators == null)
       typeInstantiators = new HashMap<>();
@@ -47,32 +63,25 @@ public class Instantiator {
     typeInstantiators.put(typeValue, func);
   }
 
+  public void setTypeExtender(String typeValue, BiConsumer<Node, Model> func) {
+    if(this.typeExtenders == null)
+      this.typeExtenders = new HashMap<>();
+    this.typeExtenders.put(typeValue, func);
+  }
+
+  public boolean isExtender(Model model) {
+    boolean result = this.typeExtenders != null && this.typeExtenders.get(model.get("type", "Node")) != null;
+    return result;
+  }
+
+  // defaults
+
   private Node defaultInstantiator(Model model){
     Node n = new Node(); //typ.equals("Node")){
     if(this.configurator != null)
       this.configurator.cfg(n, model);
     return n;
   }
-
-  public void setTypeExtender(String typeValue, BiConsumer<Node, Model> func) {
-	  if(this.typeExtenders == null)
-		  this.typeExtenders = new HashMap<>();
-	  this.typeExtenders.put(typeValue, func);
-  }
-
-  public boolean isExtender(Model model) {
-	  boolean result = this.typeExtenders != null && this.typeExtenders.get(model.get("type", "Node")) != null;
-	  return result;
-  }
-
-  public void extend(Node n, Model m) {
-	  this.typeExtenders.get(m.get("type", "BaseExtension")).accept(n, m);
-  }
-
-  public Configurator getConfigurator(){
-    return this.configurator;
-  }
-
 
   private void registerDefaultTypeInstantiators(){
     this.setTypeInstantiator("Node", (Model model) -> {

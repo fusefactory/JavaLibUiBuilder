@@ -18,6 +18,12 @@ public class Configurator {
   private boolean bActive = false;
   private boolean bDefaultNodesToNotInteractive = false;
 
+  // config methods
+
+  public void setDataCollection(ModelCollection collection){
+    this.configs = collection;
+  }
+
   public ModelCollection getDataCollection(){
     return this.configs;
   }
