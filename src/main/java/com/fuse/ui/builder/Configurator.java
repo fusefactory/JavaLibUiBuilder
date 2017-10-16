@@ -17,7 +17,6 @@ public class Configurator {
   private ModelCollection configs = new ModelCollection();
   private static PGraphics pg = new PGraphics(); // only needed for color stuff
   private boolean bActive = false;
-  private boolean bDefaultNodesToNotInteractive = false;
 
   // config methods
 
@@ -40,14 +39,6 @@ public class Configurator {
     return this.bActive;
   }
 
-  public void setDefaultNodesToNotInteractive(boolean set){
-    bDefaultNodesToNotInteractive = set;
-  }
-
-  public boolean getDefaultNodesToNotInteractive(){
-    return bDefaultNodesToNotInteractive;
-  }
-
   // Node configurator methods
 
   public void cfg(Node n, String configId){
@@ -56,12 +47,8 @@ public class Configurator {
 
   public void cfg(Node n, Model mod){
     this.apply(mod, (ModelBase m) -> {
-      if(bDefaultNodesToNotInteractive)
-          n.setInteractive(m.getBool("interactive", false));
-      else
-        m.withBool("interactive", (Boolean val) -> n.setInteractive(val));
-
       m.with("name", (String val) -> n.setName(val));
+      m.withBool("interactive", (Boolean val) -> n.setInteractive(val));
       m.withFloat("plane", (Float val) -> n.setPlane(val));
       m.withBool("clipping", (Boolean val) -> n.setClipContent(val));
       m.withBool("visible", (Boolean val) -> n.setVisible(val));

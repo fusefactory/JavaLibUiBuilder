@@ -84,7 +84,7 @@ public class Builder {
   }
 
   public void setDefaultNodesToNotInteractive(boolean active){
-    instantiator.getConfigurator().setDefaultNodesToNotInteractive(active);
+    instantiator.setDefaultNodesToNotInteractive(active);
   }
 
   public void setConfigurator(Configurator configurator){

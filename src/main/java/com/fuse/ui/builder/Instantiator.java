@@ -12,6 +12,7 @@ import com.fuse.ui.extensions.*;
 public class Instantiator {
   private Map<String, Function<Model, Node>> typeInstantiators = null;
   private Map<String, BiConsumer<Node, Model>> typeExtenders = null;
+  private boolean bDefaultNodesToNotInteractive = false;
   private Configurator configurator = new Configurator();
 
   public Instantiator(){
@@ -35,6 +36,9 @@ public class Instantiator {
 
     if(n == null)
       n = this.defaultInstantiator(model);
+
+    if(bDefaultNodesToNotInteractive)
+      n.setInteractive(false);
 
     if(this.configurator != null)
       this.configurator.cfg(n, model);
@@ -72,6 +76,14 @@ public class Instantiator {
   public boolean isExtender(Model model) {
     boolean result = this.typeExtenders != null && this.typeExtenders.get(model.get("type", "Node")) != null;
     return result;
+  }
+
+  public void setDefaultNodesToNotInteractive(boolean set){
+    bDefaultNodesToNotInteractive = set;
+  }
+
+  public boolean getDefaultNodesToNotInteractive(){
+    return bDefaultNodesToNotInteractive;
   }
 
   // defaults
