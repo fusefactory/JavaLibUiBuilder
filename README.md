@@ -37,25 +37,27 @@ Compile Dependencies are:
 
 
 
-## USAGE: Generating UI structures from json data using the default builder
+## USAGE: Generating UI json data using the default builder
 
-The Builder class is designed to use json data (or any other data format that can be read by the ModelCollection class of the JavaLibCms package) to generated UI hierarchy.
+The Builder class is designed to use json data (or any other data format that can be read by the ModelCollection class of the JavaLibCms package) to generate a UI hierarchy of Node instances (see [JavaLibUi package](https://github.com/fusefactory/JavaLibUi) package).
+
+The default builder by default also uses the default ```Configurator``` class that takes any supported attributes (like position, size, color, etc.) in the JSON data and uses it to "configure" the created Node instances.
 
 
-Assuming you have a file called ```data/ui.json``` with the following content:
+Assuming you have a file called ```data/ui.json``` with the following content (the menu only has structure data, the page also has layout and some content data):
 ```json
   [
-    {"id": "InfoPage.page"},
-    {"id": "InfoPage.page.title", "type": "TextNode"},
-    {"id": "InfoPage.page.subtitle", "type": "TextNode"},
-    {"id": "InfoPage.page.image", "type": "ImageNode"},
-    {"id": "InfoPage.page.image.overlay", "type": "TextNode"},
-
     {"id": "InfoPage.menu", "type": "RectNode"},
     {"id": "InfoPage.menu.btnOk", "type": "RectNode", "name":"btnOk"},
     {"id": "InfoPage.menu.btnOk.text", "type": "TextNode"},
     {"id": "InfoPage.menu.btnCancel", "type": "RectNode", "name":"btnCancel"},
     {"id": "InfoPage.menu.btnCancel.text", "type": "TextNode"},
+
+    {"id": "InfoPage.page","pos":"100,100","size":"800,600"},
+    {"id": "InfoPage.page.title", "type": "TextNode", "pos":"10,10", "size":"790,30", "text":"TITLE HERE"},
+    {"id": "InfoPage.page.subtitle", "type": "TextNode", "pos":"10,50", "size":"790,25", "text":"SUBTITLE HERE"},
+    {"id": "InfoPage.page.image", "type": "ImageNode", "pos":"10,100", "size":"780,490", "image": "data/placeholder/loading.png"},
+    {"id": "InfoPage.page.image.overlay", "type": "TextNode", "size":"800,600"},
   ]
 ```
 
@@ -67,10 +69,6 @@ You can use the builder class to load and use that data for generating UI struct
     this.builder = new Builder();
     // load our json data into the builder's ModelCollection
     this.builder.getLayoutCollection().loadJsonFromFile("data/ui.json");
-
-    // this configuration should become default behaviour, but is necessary for now
-    // see USAGE: NON-implicit builder section below
-    this.builder.setUseImplicitBuilder(true);
   }
 
   public void openInfoPage(){
@@ -78,8 +76,8 @@ You can use the builder class to load and use that data for generating UI struct
     Node pageNode = builder.createNode("InfoPage.page");
 
     // The pageNode instance will be a Node instance, which has the following child-hierarchy:
-    // - TextNode
-    // - TextNode
+    // - TextNode (at relative position 10,10 with size: 790,30 and pre-populated with the text "TITLE HERE")
+    // - TextNode (etc.)
     // - ImageNode
     //   - TextNode (child of the last ImageNode)
 
@@ -107,7 +105,6 @@ The default builder in this package supports the Node classes in the JavaLibUi p
 
     public Builder(){
       this.getLayoutCollection().loadJsonFromFile("data/ui.json");
-      this.setUseImplicitBuilder(true); // this should become default
 
       // register custom instantiator lambda for Node
       this.setTypeInstantiator("Node", (Model model) -> {
@@ -184,7 +181,6 @@ Note also that the configurator class can very well be used for non-Node type ob
 
     public Builder(){
       this.getLayoutCollection().loadJsonFromFile("data/ui.json");
-      this.setUseImplicitBuilder(true); // this should become default
 
       // register custom instantiator lambda for
       this.setTypeInstantiator("Node", (Model model) -> {
@@ -264,36 +260,3 @@ Instantiate the above structure + preconfigured nodes using: ```builder.createNo
     }
   }
 ```
-
-## About implicit builders and non-implicit builders
-
-#### Implicit builder
-In the below data, according to the _implicit builder_, button1, button2 and button3 are considered children of HomePage.menu because they start with the
-full HomePage.menu ID, followed by a dot (.). Therefore button4 is not a child of HomePage.menu, but a child of ```HomePage```.
-
-HomePage is not explicitly defined but trying to build it will just default to Node and find the button4 child to add to it.
-
-```json
-  [
-    {"id":"HomePage.menu"},
-    {"id":"HomePage.menu.button1"},
-    {"id":"HomePage.menu.button2"},
-    {"id":"HomePage.menu.button3"},
-    {"id":"HomePage.button4"},
-  ]
-```
-
-#### Non-implicit (aka explicit) builder (not recommended but default for now)
-In the below data, according to the _NON-implicit builder_, only button1, button2 and button4 are considered children of the ```HomePage.menu``` node configuration (for reasons that should be obvious).
-
-```json
-  [
-    {"id":"HomePage.menu"},
-    {"id":"HomePage.menu.button1", "parent":"HomePage.menu"},
-    {"id":"HomePage.menu.button2", "parent":"HomePage.menu"},
-    {"id":"HomePage.menu.button3"},
-    {"id":"HomePage.button4", "parent":"HomePage.menu"},
-  ]
-```
-
-Note that though the explicit style helps avoiding unintentional relationships, it also causes a LOT more redundant data that clutters the json. Therefore the implicit-style is recommended, which has the added advantage of enforcing clean and consistent naming conventions.
