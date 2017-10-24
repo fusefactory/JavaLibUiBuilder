@@ -79,7 +79,7 @@ public class Configurator {
           float f = Float.parseFloat(val.replace("%",""))/100.0f;
           ParentRelativeTransformer.enableFor(n).setSizeFactorX(f);
         } else {
-          n.setWidth(m.getFloat("width"));
+          n.setWidth(m.getFloat("width") + m.getFloat("widthVar", 0.0f) * (new Random().nextFloat()-0.5f) * 2.0f);
         }
       });
 
