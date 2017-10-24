@@ -4,4 +4,11 @@
     {"id": "NodeBuilderImplicitTest.page.subtitle", "type": "TextNode"},
     {"id": "NodeBuilderImplicitTest.page.image", "type": "ImageNode"},
     {"id": "NodeBuilderImplicitTest.page.image.overlay", "type": "TextNode"},
+
+    {"id": "NodeBuilderImplicitTest.styles"},
+    {"id": "NodeBuilderImplicitTest.styles.child1"},
+    {"id": "NodeBuilderImplicitTest.styles.child1:style1"},
+    {"id": "NodeBuilderImplicitTest.styles.child1:style2"},
+    {"id": "NodeBuilderImplicitTest.styles.child1#id1"},
+    {"id": "NodeBuilderImplicitTest.styles.child1#id2"},
 ]
