@@ -214,6 +214,7 @@ public class Configurator {
         if(mode.equals("FILL")) n.setMode(ImageNode.Mode.FILL);
       });
 
+      m.with("fragShader", (String v) -> n.setShaderPath(v));
       m.withBool("autoResize", (Boolean v) -> n.setAutoResizeToImage(v));
       m.with("tint", (String v) -> n.setTint(getColor(m, "tint")));
 
