@@ -217,6 +217,7 @@ public class Configurator {
       m.with("fragShader", (String v) -> n.setShaderPath(v));
       m.withBool("autoResize", (Boolean v) -> n.setAutoResizeToImage(v));
       m.with("tint", (String v) -> n.setTint(getColor(m, "tint")));
+      m.withBool("clearImageOnDestroy", (Boolean v) -> n.setClearImageOnDestroy(v));
 
       // m.with("image", (String v) -> {
       //   // load image?
