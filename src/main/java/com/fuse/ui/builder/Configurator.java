@@ -251,7 +251,7 @@ public class Configurator {
       m.withFloat("maxPosY", (Float v) -> e.setMaxPosY(v));
       m.withFloat("minScale", (Float v) -> e.setMinScale(v));
       m.withFloat("maxScale", (Float v) -> e.setMaxScale(v));
-      m.withFloat("smootValue", (Float v) -> e.setSmoothValue(v));
+      m.withFloat("smoothValue", (Float v) -> e.setSmoothValue(v));
       m.withBool("stopOnTouch", (Boolean v) -> e.setStopOnTouch(v));
       m.withFloat("maxTransformationTime", (Float v) -> e.setMaxTransformationTime(v));
       m.withFloat("doneScaleDeltaMag", (Float v) -> e.setDoneScaleDeltaMag(v));
@@ -270,6 +270,8 @@ public class Configurator {
 
     this.apply(mod, (ModelBase m) -> {
       m.withBool("abortOnSecondTouch", (Boolean v) -> e.setAbortOnSecondTouch(v));
+      m.withBool("vertical", (Boolean v) -> e.setVerticalEnabled(v));
+      m.withBool("horizontal", (Boolean v) -> e.setHorizontalEnabled(v));
     });
   }
 
