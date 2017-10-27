@@ -165,21 +165,24 @@ public class Configurator {
     });
   }
 
-  public void cfg(RectNode n, String configId){
+  public void cfg(ShapeNode n, String configId){
     this.cfg(n, this.configs.findById(configId, true));
   }
 
-  public void cfg(RectNode n, Model mod){
+  public void cfg(ShapeNode n, Model mod){
     this.cfg((Node)n, mod);
 
     this.apply(mod, (ModelBase m) -> {
       m.withFloat("fillAlpha", (Float val) -> n.setFillAlpha(val));
       m.withFloat("strokeWeight", (Float val) -> n.setStrokeWeight(val));
-      m.with("color", (String val) -> n.setRectColor(getColor(m, "color")));
-      m.with("fillColor", (String val) -> n.setRectColor(getColor(m, "fillColor")));
-      m.with("strokeColor", (String val) -> n.setRectStrokeColor(getColor(m, "strokeColor")));
+      m.with("color", (String val) -> n.setFillColor(getColor(m, "color")));
+      m.with("fillColor", (String val) -> n.setFillColor(getColor(m, "fillColor")));
+      m.with("strokeColor", (String val) -> n.setStrokeColor(getColor(m, "strokeColor")));
     });
   }
+
+  // RectNode goes straight to the ShapeNode cfg method
+  // EllipseNode goes straight to the ShapeNode cfg method
 
   public void cfg(LineNode n, String configId){
     this.cfg(n, this.configs.findById(configId, true));

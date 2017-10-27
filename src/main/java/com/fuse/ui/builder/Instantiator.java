@@ -124,6 +124,13 @@ public class Instantiator {
       return node;
     });
 
+    this.setTypeInstantiator("EllipseNode", (Model model) -> {
+      EllipseNode node = new EllipseNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
     this.setTypeInstantiator("LambdaNode", (Model model) -> {
       LambdaNode node = new LambdaNode();
       if(this.configurator != null)
