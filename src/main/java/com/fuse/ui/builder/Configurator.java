@@ -337,8 +337,7 @@ public class Configurator {
       m.withFloat("snapThrowFactor", (Float v) -> e.setSnapThrowFactor(v));
       m.withFloat("snapVelocity", (Float v) -> e.setSnapVelocity(v));
       m.withFloat("snapThrowFactor", (Float v) -> e.setSnapThrowFactor(v));
-      m.withFloat("velocityReductionFactor", (Float v) -> e.setVelocityReductionFactor(v));
-      m.withFloat("dampingFactor", (Float v) -> e.setDampingFactor(v));
+      m.withFloat("velocityReductionFactor", (Float v) -> e.setDampThrowFactor(v));
       m.withFloat("minTouchDurationToDamp", (Float v) -> e.setMinTouchDurationToDamp(v));
       m.withFloat("maxDampVelocity", (Float v) -> e.setMaxDampVelocity(v));
       if(m.has("snapInterval")) e.setSnapInterval(getPVector(m, "snapInterval", new PVector(200,0,0)));
