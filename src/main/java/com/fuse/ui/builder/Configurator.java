@@ -135,7 +135,7 @@ public class Configurator {
 
   public void cfg(TextNode n, Model mod){
     // first apply Node-specific configurations
-    this.cfg((Node)n, mod);
+    this.cfg((ShapeNode)n, mod);
 
     // then apply TextNode-specific configurations
     this.apply(mod, (ModelBase m) -> {
@@ -178,6 +178,21 @@ public class Configurator {
       m.with("color", (String val) -> n.setFillColor(getColor(m, "color")));
       m.with("fillColor", (String val) -> n.setFillColor(getColor(m, "fillColor")));
       m.with("strokeColor", (String val) -> n.setStrokeColor(getColor(m, "strokeColor")));
+      m.with("blendMode", (String val) -> {
+        switch(val) {
+          
+          case "BLEND": n.setBlendMode(PGraphics.BLEND); break;
+          case "ADD": n.setBlendMode(PGraphics.ADD); break;
+          case "SUBTRACT": n.setBlendMode(PGraphics.SUBTRACT); break;
+          case "DARKEST": n.setBlendMode(PGraphics.DARKEST); break;
+          case "LIGHTEST": n.setBlendMode(PGraphics.LIGHTEST); break;
+          case "DIFFERENCE": n.setBlendMode(PGraphics.DIFFERENCE); break;
+          case "EXCLUSION": n.setBlendMode(PGraphics.EXCLUSION); break;
+          case "MULTIPLY": n.setBlendMode(PGraphics.MULTIPLY); break;
+          case "SCREEN": n.setBlendMode(PGraphics.SCREEN); break;
+          case "REPLACE": n.setBlendMode(PGraphics.REPLACE); break;
+        }
+      });
     });
   }
 
