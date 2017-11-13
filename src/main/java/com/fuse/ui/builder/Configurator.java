@@ -180,7 +180,7 @@ public class Configurator {
       m.with("strokeColor", (String val) -> n.setStrokeColor(getColor(m, "strokeColor")));
       m.with("blendMode", (String val) -> {
         switch(val) {
-          
+
           case "BLEND": n.setBlendMode(PGraphics.BLEND); break;
           case "ADD": n.setBlendMode(PGraphics.ADD); break;
           case "SUBTRACT": n.setBlendMode(PGraphics.SUBTRACT); break;
@@ -243,6 +243,19 @@ public class Configurator {
     });
   }
 
+  public void cfg(ShadowImageNode n, String configId){
+    this.cfg(n, this.configs.findById(configId, true));
+  }
+
+  public void cfg(ShadowImageNode node, Model mod){
+    this.cfg((ImageNode)node, mod);
+
+    this.apply(mod, (ModelBase m) -> {
+      m.withBool("drawShadow", (Boolean v) -> node.setDrawShadow(v));
+      if(m.has("shadowOffset"))   node.setShadowOffset(this.getPVector(m, "shadowOffset", node.getShadowOffset()));
+      if(m.has("shadowColor"))   node.setShadowColor(this.getColor(m, "shadowColor", node.getShadowColor()));
+    });
+  }
 
   // ExtensionBase configurator methods
 

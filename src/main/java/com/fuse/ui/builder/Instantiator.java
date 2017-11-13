@@ -117,6 +117,13 @@ public class Instantiator {
       return node;
     });
 
+    this.setTypeInstantiator("ShadowImageNode", (Model model) -> {
+      ShadowImageNode node = new ShadowImageNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
     this.setTypeInstantiator("RectNode", (Model model) -> {
       RectNode node = new RectNode();
       if(this.configurator != null)
