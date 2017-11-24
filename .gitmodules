@@ -1,0 +1,3 @@
+[submodule "lib/JavaLibUi"]
+	path = lib/JavaLibUi
+	url = git@github.com:fusefactory/JavaLibUi

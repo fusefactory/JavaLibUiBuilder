@@ -1,64 +1,191 @@
 package com.fuse.ui.builder;
 
 import java.util.function.Function;
+import java.util.function.BiConsumer;
 import java.util.Map;
 import java.util.HashMap;
 import com.fuse.cms.Model;
 
-import com.fuse.ui.Node;
-import com.fuse.ui.LineNode;
-import com.fuse.ui.TextNode;
-import com.fuse.ui.ImageNode;
+import com.fuse.ui.*;
+import com.fuse.ui.extensions.*;
 
 public class Instantiator {
-  private Map<String, Function<Model, Node>> typeInstatiators = null;
+  private Map<String, Function<Model, Node>> typeInstantiators = null;
+  private Map<String, BiConsumer<Node, Model>> typeExtenders = null;
+  private boolean bDefaultNodesToNotInteractive = false;
+  private Configurator configurator = new Configurator();
+
+  public Instantiator(){
+    this.registerDefaultTypeInstantiators();
+    this.registerDefaultExtenders();
+  }
+
+  // operation methods
 
   public Node createNode(Model model){
+    Node n = null;
+
     String typ = model.get("type", "Node");
 
-    if(typeInstatiators != null){
-      Function<Model, Node> func = typeInstatiators.get(typ);
+    if(typeInstantiators != null){
+      Function<Model, Node> func = typeInstantiators.get(typ);
       if(func != null){
-        return func.apply(model);
+        n = func.apply(model);
       }
     }
 
-    return Instantiator.defaultInstantiator(model);
+    if(n == null)
+      n = this.defaultInstantiator(model);
+
+    if(bDefaultNodesToNotInteractive)
+      n.setInteractive(false);
+
+    if(this.configurator != null)
+      this.configurator.cfg(n, model);
+
+    return n;
+  }
+
+  public void extend(Node n, Model m) {
+	  this.typeExtenders.get(m.get("type", "BaseExtension")).accept(n, m);
+  }
+
+  // config methods
+
+  public Configurator getConfigurator(){
+    return this.configurator;
+  }
+
+  public void setConfigurator(Configurator configurator){
+    this.configurator = configurator;
   }
 
   public void setTypeInstantiator(String typeValue, Function<Model, Node> func){
-    if(typeInstatiators == null)
-      typeInstatiators = new HashMap<>();
+    if(typeInstantiators == null)
+      typeInstantiators = new HashMap<>();
 
-    typeInstatiators.put(typeValue, func);
+    typeInstantiators.put(typeValue, func);
   }
 
-  public static Node defaultInstantiator(Model model){
-    String typ = model.get("type", "Node");
+  public void setTypeExtender(String typeValue, BiConsumer<Node, Model> func) {
+    if(this.typeExtenders == null)
+      this.typeExtenders = new HashMap<>();
+    this.typeExtenders.put(typeValue, func);
+  }
 
-    Node n = null;
+  public boolean isExtender(Model model) {
+    boolean result = this.typeExtenders != null && this.typeExtenders.get(model.get("type", "Node")) != null;
+    return result;
+  }
 
-    if(typ.equals("TextNode")){
-      n = new TextNode();
-    }
+  public void setDefaultNodesToNotInteractive(boolean set){
+    bDefaultNodesToNotInteractive = set;
+  }
 
-    if(n == null && typ.equals("LineNode")){
-      n = new LineNode();
-    }
+  public boolean getDefaultNodesToNotInteractive(){
+    return bDefaultNodesToNotInteractive;
+  }
 
-    if(n == null && typ.equals("ImageNode")){
-      n = new ImageNode();
-      // configurator?
-      return n;
-    }
+  // defaults
 
-    if(n == null){ //typ.equals("Node")){
-      n = new Node();
-    }
-
-    if(model.has("name"))
-      n.setName(model.get("name"));
-
+  private Node defaultInstantiator(Model model){
+    Node n = new Node(); //typ.equals("Node")){
+    if(this.configurator != null)
+      this.configurator.cfg(n, model);
     return n;
+  }
+
+  private void registerDefaultTypeInstantiators(){
+    this.setTypeInstantiator("Node", (Model model) -> {
+      Node node = new Node();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
+    this.setTypeInstantiator("TextNode", (Model model) -> {
+      TextNode node = new TextNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
+    this.setTypeInstantiator("ImageNode", (Model model) -> {
+      ImageNode node = new ImageNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
+    this.setTypeInstantiator("ShadowImageNode", (Model model) -> {
+      ShadowImageNode node = new ShadowImageNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
+    this.setTypeInstantiator("RectNode", (Model model) -> {
+      RectNode node = new RectNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
+    this.setTypeInstantiator("EllipseNode", (Model model) -> {
+      EllipseNode node = new EllipseNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
+    this.setTypeInstantiator("LambdaNode", (Model model) -> {
+      LambdaNode node = new LambdaNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+
+    this.setTypeInstantiator("EventNode", (Model model) -> {
+      EventNode node = new EventNode();
+      if(this.configurator != null)
+        this.configurator.cfg(node, model);
+      return node;
+    });
+  }
+
+  private void registerDefaultExtenders(){
+    this.setTypeExtender("Draggable", (Node node, Model model) -> {
+      Draggable ext = Draggable.enableFor(node);
+      if(this.configurator != null)
+        this.configurator.cfg(ext, model);
+    });
+
+    this.setTypeExtender("Constrain", (Node node, Model model) -> {
+      Constrain ext = Constrain.enableFor(node);
+      if(this.configurator != null)
+        this.configurator.cfg(ext, model);
+    });
+
+    this.setTypeExtender("PinchZoom", (Node node, Model model) -> {
+      PinchZoom ext = PinchZoom.enableFor(node);
+      if(this.configurator != null)
+        this.configurator.cfg(ext, model);
+    });
+
+    this.setTypeExtender("DoubleClickZoom", (Node node, Model model) -> {
+      DoubleClickZoom ext = DoubleClickZoom.enableFor(node);
+      if(this.configurator != null)
+        this.configurator.cfg(ext, model);
+    });
+
+    this.setTypeExtender("Swiper", (Node node, Model model) -> {
+      Swiper ext = Swiper.enableFor(node);
+      if(this.configurator != null)
+        this.configurator.cfg(ext, model);
+    });
+
+    this.setTypeExtender("TouchEventForwarder", (Node node, Model model) -> {
+      TouchEventForwarder.enableForChildNames(node, model.get("children", "").split(","));
+    });
   }
 }
