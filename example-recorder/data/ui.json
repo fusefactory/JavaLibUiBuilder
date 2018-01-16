@@ -1,0 +1,5 @@
+[
+  {"id":"Page","size":"800,600"},
+  {"id":"Page.rect","type":"RectNode","x":"50%","y":"50%","size":"100,100","color":"255,255,0"},
+  {"id":"Page.rect.mover","type":"MoverExt","speed":3,"amplitude":200}
+]
