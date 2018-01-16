@@ -6,6 +6,15 @@ import com.fuse.cms.*;
 import com.fuse.ui.builder.*;
 import com.fuse.ui.*;
 
+class Recorder {
+  public String filename = "output-%04d.png";
+  public int counter = 0;
+
+  public void recordFrame(PGraphics pg){
+    pg.save(String.format(this.filename, this.counter));
+    counter += 1;
+  }
+}
 
 public class App extends PApplet {
 
@@ -21,6 +30,7 @@ public class App extends PApplet {
 
   private Configurator cfg;
   private ModelCollection configs = new ModelCollection();
+  private Recorder recorder = new Recorder();
 
   public static void main( String[] args ){
     PApplet.main("com.fuse.ui.builder.example.App");
@@ -57,6 +67,10 @@ public class App extends PApplet {
     touchManager = new TouchManager();
     touchManager.setNode(sceneNode);
     touchManager.setDispatchOnUpdate(true);
+
+    this.cfg.apply("Recorder", (ModelBase mod) -> {
+      mod.with("filename", (String v) -> this.recorder.filename = v);
+    });
   }
 
   private void populateScene(){
@@ -94,6 +108,7 @@ public class App extends PApplet {
     pg.endDraw();
 
     papplet.image(pg, 0f,0f);
+    this.recorder.recordFrame(this.pg);
   }
 
   public void mousePressed(){
