@@ -8,18 +8,24 @@ import com.fuse.ui.Node;
 public class MoverExt extends ExtensionBase {
   private PVector origin = null;
   private float time = 0.0f;
+  // configurables
   private float speed = 1.0f;
   private float amplitude = 100.0f;
 
   @Override
   protected void setup(){
-    System.out.println("MoverExt setup: "+node.getPosition().toString());
+    // initializing origin here doesn't work;
+    // when this extension is created by the builder
+    // it hasn't run our node through the configurator yet,
+    // so its position is always 0,0,0.
+    // TODO: configure node before applying extensions.
+    // this.origin = this.node.getPosition();
   }
 
-  @Override
-  protected void teardown(){
-
-  }
+  // @Override
+  // protected void teardown(){
+  //
+  // }
 
   @Override
   public void update(float dt){
@@ -32,8 +38,11 @@ public class MoverExt extends ExtensionBase {
     this.node.setPosition(pos);
   }
 
+  // configure methods // // // // //
+
   public void setSpeed(float speed) { this.speed = speed; }
   public void setAmplitude(float amp) { this.amplitude = amp; }
+
   // static factory methods // // // // //
 
   public static MoverExt createFor(Node n){
