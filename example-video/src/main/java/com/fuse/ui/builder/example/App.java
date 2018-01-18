@@ -5,6 +5,7 @@ import processing.core.*;
 import com.fuse.cms.*;
 import com.fuse.ui.builder.*;
 import com.fuse.ui.*;
+import com.fuse.resources.MovieSource;
 
 class Recorder {
   public String filename = "output-%04d.png";
@@ -32,6 +33,7 @@ public class App extends PApplet {
 
   private Configurator cfg;
   private ModelCollection configs = new ModelCollection();
+  private MovieSource movieSource;
   private Recorder recorder = new Recorder();
 
   public static void main( String[] args ){
@@ -46,8 +48,10 @@ public class App extends PApplet {
 
     // load json data file
     this.configs.loadJsonFromFile(UI_DATA_FILE);
-    // create configurator
-    this.cfg = new Configurator(configs);
+
+    // create movie source and configurator
+    this.movieSource = new MovieSource(this.papplet);
+    this.cfg = new Configurator(configs, this.movieSource.getAsyncFacade());
   }
 
   public void settings(){

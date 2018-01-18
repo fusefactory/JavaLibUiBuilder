@@ -20,7 +20,13 @@ public class Builder extends com.fuse.ui.builder.Builder {
   private void setup(){
     this.setTypeExtender("MoverExt", (Node node, Model model) -> {
       MoverExt ext = MoverExt.createFor(node);
-      this.configurator.cfg(ext, model.getId());
+      this.configurator.cfg(ext, model);
+    });
+
+    this.setTypeInstantiator("MovieNode", (Model model) -> {
+      MovieNode n = new MovieNode();
+      this.configurator.cfg(n, model);
+      return n;
     });
   }
 }
