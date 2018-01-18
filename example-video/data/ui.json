@@ -5,5 +5,5 @@
   {"id":"Page","size":"800,600"},
   {"id":"PPage.rect","type":"RectNode","x":"50%","y":"50%","size":"100,100","color":"255,255,0"},
   {"id":"PPage.rect.mover","type":"MoverExt","speed":3,"amplitude":200},
-  {"id":"Page.movie","type":"MovieNode","movie":"data/vid.mp4","autoStart":true,"autoResize":true}
+  {"id":"Page.movie","type":"MovieNode","size":"800,600","movie":"data/vid.mp4","autoStart":true}
 ]

@@ -61,6 +61,10 @@ public class App extends PApplet {
   }
 
   public void setup(){
+    System.setProperty("jna.library.path", "lib/archiviodigitale-binaries/macosx64");
+    System.setProperty("gstreamer.library.path", "lib/macosx64");
+    System.setProperty("gstreamer.plugin.path", "lib/macosx64/plugins");
+
     papplet.frameRate(30.0f);
 
     pg = papplet.createGraphics(papplet.width, papplet.height, P3D);
@@ -78,16 +82,12 @@ public class App extends PApplet {
     touchManager.setNode(sceneNode);
     touchManager.setDispatchOnUpdate(true);
 
-    System.out.println("pre-recorder config");
     this.cfg.apply("Recorder", (ModelBase mod) -> {
-      System.out.println("in-recorder config");
       mod.with("filename", (String v) -> this.recorder.filename = v);
       mod.withBool("enabled", (Boolean v) -> {
         this.recorder.enabled = v;
-        System.out.println("Enabled: "+v.toString());
       });
     });
-    System.out.println("post-recorder config");
   }
 
   private void populateScene(){

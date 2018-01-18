@@ -1,3 +1,4 @@
 build
 .gradle
 data/recording
+lib/macosx64

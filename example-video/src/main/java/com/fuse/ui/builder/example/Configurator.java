@@ -61,6 +61,7 @@ public class Configurator extends com.fuse.ui.builder.Configurator{
         }
 
         op.withSingleResult((Movie loadedItem) -> {
+          System.out.println("MOVIE LOADED: "+v+": "+Integer.toString(loadedItem.width)+"x"+Integer.toString(loadedItem.height));
           node.setMovie(loadedItem);
         });
       });

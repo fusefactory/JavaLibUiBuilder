@@ -114,6 +114,19 @@ public class MovieNode extends Node {
     pg.noTint();
   }
 
+  private void autoStart() {
+    if(bAutoStarted || movie == null || movie.playbin == null || movie.playbin.isPlaying())
+    return;
+
+    bAutoStarted = true; // don't keep starting; user might want to pause it at some point
+    movie.play();
+    if(this.audioPlayer != null) {
+      this.audioPlayer.play();
+    }
+
+    autoStartEvent.trigger(this);
+  }
+
   /**
   * Set/change the movie of this node.
   * @param newMovie The movie that should from now on be rendered by this node
@@ -134,24 +147,11 @@ public class MovieNode extends Node {
     }
 
     if(autoResizeToMovie)
-    setSize(movie.width, movie.height);
+      setSize(movie.width, movie.height);
 
     if(bAutoStart) {
       this.autoStart();
     }
-  }
-
-  private void autoStart() {
-    if(bAutoStarted || movie == null || movie.playbin == null || movie.playbin.isPlaying())
-    return;
-
-    bAutoStarted = true; // don't keep starting; user might want to pause it at some point
-    movie.play();
-    if(this.audioPlayer != null) {
-      this.audioPlayer.play();
-    }
-
-    autoStartEvent.trigger(this);
   }
 
   /** @return PImage The movie that this node is rendering */
