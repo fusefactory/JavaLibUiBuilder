@@ -19,6 +19,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://github.com/fusefactory/JavaLibEvent -->
+        <dependency>
+            <groupId>com.github.fusefactory</groupId>
+            <artifactId>JavaLibEvent</artifactId>
+            <version>1.1.9</version>
+        </dependency>
+
+
         <!-- https://github.com/fusefactory/JavaLibCms -->
         <dependency>
             <groupId>com.github.fusefactory</groupId>
@@ -27,11 +35,11 @@
         </dependency>
 
         <!-- https://github.com/fusefactory/JavaLibUi -->
-        <!-- <dependency>
+        <dependency>
             <groupId>com.github.fusefactory</groupId>
             <artifactId>JavaLibUi</artifactId>
-            <version>1.1.0</version>
-        </dependency> -->
+            <version>1.1.1</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.processing/core -->
         <dependency>
