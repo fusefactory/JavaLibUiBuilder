@@ -1,13 +1,25 @@
 package com.fuse.ui.builder;
 
-import java.util.function.Function;
-import java.util.function.BiConsumer;
-import java.util.Map;
 import java.util.HashMap;
-import com.fuse.cms.Model;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
-import com.fuse.ui.*;
-import com.fuse.ui.extensions.*;
+import com.fuse.cms.Model;
+import com.fuse.ui.EllipseNode;
+import com.fuse.ui.EventNode;
+import com.fuse.ui.ImageNode;
+import com.fuse.ui.LambdaNode;
+import com.fuse.ui.Node;
+import com.fuse.ui.RectNode;
+import com.fuse.ui.ShadowImageNode;
+import com.fuse.ui.TextNode;
+import com.fuse.ui.extensions.Constrain;
+import com.fuse.ui.extensions.DoubleClickZoom;
+import com.fuse.ui.extensions.Draggable;
+import com.fuse.ui.extensions.PinchZoom;
+import com.fuse.ui.extensions.Swiper;
+import com.fuse.ui.extensions.TouchEventForwarder;
 
 public class Instantiator {
   private Map<String, Function<Model, Node>> typeInstantiators = null;

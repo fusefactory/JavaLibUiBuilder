@@ -2,15 +2,27 @@ package com.fuse.ui.builder;
 
 import java.util.Random;
 import java.util.function.Consumer;
-import java.util.Map;
-import java.util.HashMap;
-import processing.core.PApplet;
-import processing.core.PVector;
-import processing.core.PGraphics;
 
-import com.fuse.cms.*;
-import com.fuse.ui.*;
-import com.fuse.ui.extensions.*;
+import com.fuse.cms.Model;
+import com.fuse.cms.ModelBase;
+import com.fuse.cms.ModelCollection;
+import com.fuse.ui.ImageNode;
+import com.fuse.ui.LineNode;
+import com.fuse.ui.Node;
+import com.fuse.ui.ShadowImageNode;
+import com.fuse.ui.ShapeNode;
+import com.fuse.ui.TextNode;
+import com.fuse.ui.extensions.Constrain;
+import com.fuse.ui.extensions.DoubleClickZoom;
+import com.fuse.ui.extensions.Draggable;
+import com.fuse.ui.extensions.ExtensionBase;
+import com.fuse.ui.extensions.PinchZoom;
+import com.fuse.ui.extensions.Swiper;
+import com.fuse.ui.extensions.TransformerExtension;
+
+import processing.core.PApplet;
+import processing.core.PGraphics;
+import processing.core.PVector;
 
 public class Configurator {
 
@@ -141,7 +153,7 @@ public class Configurator {
     this.apply(mod, (ModelBase m) -> {
       m.with("text", (String val) -> n.setText(val));
       m.withFloat("textSize", (Float val) -> n.setTextSize(val));
-      m.with("color", (String v) -> n.setTextColor(getColor(m, "color")));
+      m.with("color", (String v) -> n.setFillColor(getColor(m, "color")));
       m.with("offset", (String v) -> n.setTextOffset(getPVector(m, "offset")));
 
       m.with("framePadding", (String v) -> n.setFramePadding(getPVector(m, "framePadding")));
@@ -252,8 +264,8 @@ public class Configurator {
 
     this.apply(mod, (ModelBase m) -> {
       m.withBool("drawShadow", (Boolean v) -> node.setDrawShadow(v));
-      if(m.has("shadowOffset"))   node.setShadowOffset(this.getPVector(m, "shadowOffset", node.getShadowOffset()));
-      if(m.has("shadowColor"))   node.setShadowColor(this.getColor(m, "shadowColor", node.getShadowColor()));
+      if(m.has("shadowOffset"))   node.setShadowOffset(Configurator.getPVector(m, "shadowOffset", node.getShadowOffset()));
+      if(m.has("shadowColor"))   node.setShadowColor(Configurator.getColor(m, "shadowColor", node.getShadowColor()));
     });
   }
 
