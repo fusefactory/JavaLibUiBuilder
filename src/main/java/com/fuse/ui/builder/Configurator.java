@@ -388,16 +388,16 @@ public class Configurator {
   }
 
   /// fetch model and apply using lambda
-  protected void apply(String configId, Consumer<ModelBase> func){
+  public void apply(String configId, Consumer<ModelBase> func){
     this.apply(this.configs.findById(configId, true), func);
   }
 
   /// apply lambda using data from model
-  protected void apply(Model m, Consumer<ModelBase> func){
+  public void apply(Model m, Consumer<ModelBase> func){
     this.apply(m, this, func);
   }
 
-  protected void apply(Model m, Object owner, Consumer<ModelBase> func){
+  public void apply(Model m, Object owner, Consumer<ModelBase> func){
     // if(this.bActive){
     //   m.stopTransform(owner);
     // }
@@ -432,6 +432,16 @@ public class Configurator {
     return defaultValue;
   }
 
+  public static boolean withColor(ModelBase m, String prefix, Consumer<Integer> func){
+    Integer clr = getColor(m, prefix);
+
+    if(clr == null)
+      return false;
+
+    func.accept(clr);
+    return true;
+  }
+
   public static PVector getPVector(ModelBase m, String attr){
     float[] floats = m.getVec3(attr);
     return new PVector(floats[0], floats[1], floats[2]);
@@ -442,4 +452,14 @@ public class Configurator {
     float[] floats = m.getVec3(attr, defaults);
     return new PVector(floats[0], floats[1], floats[2]);
   }
+
+  public static boolean withPVector(ModelBase m, String prefix, Consumer<PVector> func){
+    if(!m.has(prefix))
+      return false;
+
+    PVector val = getPVector(m, prefix);
+    func.accept(val);
+    return true;
+  }
+
 }
