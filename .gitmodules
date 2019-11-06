@@ -1,0 +1,6 @@
+[submodule "lib/JavaLibUi"]
+	path = lib/JavaLibUi
+	url = git@github.com:fusefactory/JavaLibUi
+[submodule "example-video/lib/JavaLibResources"]
+	path = example-video/lib/JavaLibResources
+	url = https://github.com/fusefactory/JavaLibResources

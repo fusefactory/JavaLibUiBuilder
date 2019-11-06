@@ -21,7 +21,7 @@ public class NodeBuilderImplicit extends NodeBuilder {
       return false;
 
     String rest = potentialChild.getId().substring(prefix.length());
-    boolean result = !rest.contains(".");
+    boolean result = !rest.contains(".") && !rest.contains(":") && !rest.contains("#");
     // System.out.println(potentialChild.getId() +" of? "+potentialParent.getId()+" ?? " +Boolean.toString(result));
     return result;
   }

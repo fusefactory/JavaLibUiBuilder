@@ -1,31 +1,38 @@
 package com.fuse.ui.builder;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.function.Function;
+import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
+
 import com.fuse.cms.Model;
 import com.fuse.cms.ModelCollection;
 import com.fuse.ui.Node;
 
 public class Builder {
   private ModelCollection layoutCollection;
-  private List<NodeBuilder> activeNodeBuilders;
-  private Instantiator instantiator;
-  private boolean bUseImplicitBuilder = false;
+  private Instantiator instantiator = new Instantiator();
+  private List<NodeBuilder> activeNodeBuilders = null;
+
+  // configurables
+  private boolean bUseImplicitBuilder = true;
+
+  // lifecycle methods
 
   public Builder(){
-    layoutCollection = new ModelCollection();
-    instantiator = new Instantiator();
+    this.setLayoutCollection(new ModelCollection());
   }
 
-  public ModelCollection getLayoutCollection(){
-    return layoutCollection;
+  public Builder(ModelCollection layoutCollection){
+    this.setLayoutCollection(layoutCollection);
   }
 
-  public void setLayoutCollection(ModelCollection newCol){
-    layoutCollection = newCol;
+  public Builder(ModelCollection layoutCollection, Configurator configurator){
+    this.setLayoutCollection(layoutCollection);
+    this.setConfigurator(configurator);
   }
+
+  // operation methods
 
   public Node createNode(String nodeId){
     return createNode(nodeId, false /* not active */);
@@ -46,12 +53,23 @@ public class Builder {
     return nodeBuilder.createNode();
   }
 
+  // config methods
+
   public void setTypeInstantiator(String typeValue, Function<Model, Node> func){
     instantiator.setTypeInstantiator(typeValue, func);
   }
-  
+
   public void setTypeExtender(String typeValue, BiConsumer<Node, Model> func) {
 	  this.instantiator.setTypeExtender(typeValue, func);
+  }
+
+  public void setLayoutCollection(ModelCollection newCol){
+    this.layoutCollection = newCol;
+    this.instantiator.getConfigurator().setDataCollection(newCol);
+  }
+
+  public ModelCollection getLayoutCollection(){
+    return layoutCollection;
   }
 
   public void setUseImplicitBuilder(boolean enable){
@@ -60,5 +78,17 @@ public class Builder {
 
   public boolean getUseImplicitBuilder(){
     return bUseImplicitBuilder;
+  }
+
+  public void setUseActiveTransformations(boolean active){
+    instantiator.getConfigurator().setUseActiveTransformations(active);
+  }
+
+  public void setDefaultNodesToNotInteractive(boolean active){
+    instantiator.setDefaultNodesToNotInteractive(active);
+  }
+
+  public void setConfigurator(Configurator configurator){
+    this.instantiator.setConfigurator(configurator);
   }
 }

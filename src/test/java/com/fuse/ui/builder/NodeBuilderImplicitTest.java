@@ -31,4 +31,11 @@ public class NodeBuilderImplicitTest {
     assertEquals(n.getChildNodes().get(2).getChildNodes().get(0).getClass(), TextNode.class);
     assertEquals(n.getChildNodes().get(2).getChildNodes().size(), 1);
   }
+
+  @Test public void semicolorn_and_hastags(){
+    NodeBuilderImplicit nb = new NodeBuilderImplicit(col, "NodeBuilderImplicitTest.styles", null);
+    Node n = nb.createNode();
+    assertEquals(n.getChildNodes().size(), 1);
+    assertEquals(n.getChildNodes().get(0).getChildNodes().size(), 0);
+  }
 }
